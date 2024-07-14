@@ -1,15 +1,20 @@
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
 
 export default function Home() {
   return (
     <>
       Landing Page
-      <Button
-        size={"lg"}
-      >
-        Sign In
-      </Button>
+      <SignInButton>
+        <Button>
+          Sign In
+        </Button>
+      </SignInButton>
+      <SignUpButton>
+        <Button>
+          Sign Up
+        </Button>
+      </SignUpButton>
     </>
   );
 }
