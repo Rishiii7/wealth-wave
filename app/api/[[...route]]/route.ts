@@ -4,7 +4,7 @@ import { prettyJSON } from "hono/pretty-json";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { cors } from "hono/cors";
-
+import { db } from "@/db/db";
 const schema = z.object({
     name: z.string(),
     age: z.number(),

@@ -11,7 +11,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { HeaderLogo } from '@/components/header-logo';
 import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs';
-import { shadesOfPurple } from '@clerk/themes';
 import { WelcomeMsg } from './welcome-msg';
 
 export const Header = () => {
