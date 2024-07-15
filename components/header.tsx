@@ -10,12 +10,15 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { HeaderLogo } from '@/components/header-logo';
-import { UserButton } from '@clerk/nextjs';
+import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs';
 import { shadesOfPurple } from '@clerk/themes';
+import { WelcomeMsg } from './welcome-msg';
 
 export const Header = () => {
   return (
     <>
+    <div className='space-y-12 pb-16'>
+
         <div className=' flex items-center justify-between'>
             <div className=' lg:flex items-center lg:gap-x-5'>
                 <div className='hidden lg:flex items-center'>
@@ -31,7 +34,7 @@ export const Header = () => {
                         <SheetTrigger asChild>
                             <Button
                                 variant={"secondary"}
-                            >
+                                >
                                 <Menu />
                             </Button>
                         </SheetTrigger>
@@ -49,14 +52,24 @@ export const Header = () => {
 
                 </div>
             </div>
-            <div >
-                <UserButton
-                    appearance={{
-                        baseTheme: shadesOfPurple
-                        
-                    }}
-                />
+            <div className='p-2'>
+                <ClerkLoading>
+                    <div
+                        className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] text-white"
+                        role="status">
+                        <span
+                        className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                        >Loading...</span>
+                    </div>
+                </ClerkLoading>
+                <ClerkLoaded>
+                    <UserButton />
+                </ClerkLoaded>
             </div>
+        </div>
+        <div>
+            <WelcomeMsg />
+        </div>
         </div>
     </>
   )

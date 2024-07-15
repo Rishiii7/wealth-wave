@@ -14,7 +14,7 @@ export const NavButton = ({
     isActive
 }: NavButtonProps) => {
 
-    console.log(label + isActive);
+    // console.log(label + isActive);
 
   return (
     <div>
