@@ -1,35 +1,29 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import { prettyJSON } from "hono/pretty-json";
-import { z } from "zod";
-import { zValidator } from "@hono/zod-validator";
 import { cors } from "hono/cors";
-import { db } from "@/db/db";
-const schema = z.object({
-    name: z.string(),
-    age: z.number(),
-});
+import accounts from "./accounts";
+import { HTTPException } from "hono/http-exception";
+
 
 const app = new Hono().basePath('/api');
 
 app.use( "/api/*", prettyJSON());
-app.use('/api/*', cors())
+app.use('/api/*', cors());
 
-app.get("hello", (c) => {
+app.onError( (err, c) => {
+    if( err instanceof HTTPException) {
+        return err.getResponse();
+    }
     return c.json({
-        message: "hello from Next.js"
-    });
+        error: "Internal Error"
+    }, 500);
 });
 
-
-app.post("/author", zValidator("json", schema), (c) => {
-    const data = c.req.valid("json");
-
-    return c.json({
-        success: true,
-        message: `${data.name} is ${data.age}`
-    });
-});
+const routes = app.route("/accounts", accounts);
 
 export const GET = handle( app );
 export const POST = handle( app );
+
+
+export type Apptype = typeof routes;

@@ -8,6 +8,7 @@ import {
   SignedOut,
   UserButton
 } from '@clerk/nextjs'
+import { QueryProviders } from "@/provider/query-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +27,9 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <div className="h-full">
-            {children}
+            <QueryProviders>
+              {children}
+            </QueryProviders>
           </div>
           </body>
       </html>

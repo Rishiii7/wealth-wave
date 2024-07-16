@@ -12,4 +12,4 @@ const AuthLayout = ({
   )
 }
 
-export default AuthLayout
+export default AuthLayout;
