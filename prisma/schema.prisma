@@ -15,7 +15,7 @@ datasource db {
 
 model Accounts {
   id          String      @id @default(cuid())
-  userId      String 
+  userId      String      @unique()
   name        String
   plaidId     String
 }

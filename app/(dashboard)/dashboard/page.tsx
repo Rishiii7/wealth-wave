@@ -1,11 +1,12 @@
 "use client";
 
-import { useGetAccounts } from '@/features/accounts/api/user-accounts';
+import { useGetAccounts, usePostAccoutInput } from '@/features/accounts/api/user-accounts';
 import { UserButton, ClerkLoading, ClerkLoaded } from '@clerk/nextjs';
 
 const DashboardPage = () => {
 
   const { data, isLoading } = useGetAccounts();
+  // const { data, isLoading } = usePostAccoutInput("Rishikesh");
 
   return (
     <div>
@@ -20,16 +21,16 @@ const DashboardPage = () => {
         {
           isLoading ? <div>loading...</div> : <div>
             {
-              data?.map( (account) => (
-                <div key={account.id}>
-                  { account.name }
-                </div>
-              ))
+                data?.map( (account, ind) => (
+                  <>
+                    <div>
+                      { account.id }
+                    </div>
+                  </>
+                ))
             }
           </div>
         }
-            
-        
       
     </div>
   )
