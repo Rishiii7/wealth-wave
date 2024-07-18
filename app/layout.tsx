@@ -9,6 +9,7 @@ import {
   UserButton
 } from '@clerk/nextjs'
 import { QueryProviders } from "@/provider/query-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,9 +30,10 @@ export default function RootLayout({
           <div className="h-full">
             <QueryProviders>
               {children}
+              <Toaster />
             </QueryProviders>
           </div>
-          </body>
+        </body>
       </html>
     </ClerkProvider>
   );

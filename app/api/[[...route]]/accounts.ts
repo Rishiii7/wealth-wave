@@ -24,7 +24,7 @@ const app = new Hono()
 
         const response = await db.accounts.findMany({
             where:{
-                // userId: auth.userId
+                userId: auth.userId
             },
             select: {
                 id: true,
@@ -38,7 +38,7 @@ const app = new Hono()
             message: response
         });
     } catch ( error: any){
-        // console.log( error.message )
+        console.log( error.message )
         throw new HTTPException( 401, {
            res: c.json({
             error: error.message

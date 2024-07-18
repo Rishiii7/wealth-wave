@@ -1,6 +1,11 @@
 import { client } from "@/lib/hono";
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { InferResponseType } from "hono";
+import { InferRequestType } from 'hono/client';
+import { toast } from "sonner";
 
+
+const $post = client.api.accounts.$post;
 
 export const useGetAccounts = () => {
 
@@ -23,24 +28,30 @@ export const useGetAccounts = () => {
 }
 
 // Get user name from frontend
-export const usePostAccoutInput = (name: string) => {
+export const usePostAccoutInput = () => {
+  const queryClient = useQueryClient();
 
-  const query = useQuery({
-    queryKey: ["accountPostInput"],
-    queryFn: async () => {
+  const mutation = useMutation<
+  InferResponseType<typeof $post>,
+  Error, 
+  InferRequestType<typeof $post>["json"]
+  >({
+    mutationKey: ["postAccountInput"],
+    mutationFn: async (json) => {
 
-      const response = await client.api.accounts.$post({json: { name: name}});
+      console.log("inside usePostAccount function")
+      const response = await client.api.accounts.$post({ json });
 
-      if( ! response.ok ) {
-        throw new Error("Failed to fecth accounts");
-      }
-
-      const { message } = await response.json();
-
-      return message;
-
+      return await response.json();
+    },
+    onSuccess: () =>{
+      queryClient.invalidateQueries({ queryKey: ["accountsPost"]});
+      toast("Account created successfully");
+    },
+    onError: () => {
+      toast("Something went wrong");
     }
-  });
+  })
 
-  return query;
+  return mutation;
 }

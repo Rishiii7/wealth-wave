@@ -1,36 +1,20 @@
 "use client";
 
+import { AccountInputForm } from '@/components/account-form-input';
+import { AccountsInputSheet } from '@/components/account-input';
 import { useGetAccounts, usePostAccoutInput } from '@/features/accounts/api/user-accounts';
 import { UserButton, ClerkLoading, ClerkLoaded } from '@clerk/nextjs';
 
 const DashboardPage = () => {
 
-  const { data, isLoading } = useGetAccounts();
-  // const { data, isLoading } = usePostAccoutInput("Rishikesh");
+  // const { data, isLoading } = useGetAccounts();
+  // const  mutation  = usePostAccoutInput();
 
   return (
     <div>
         DashboardPage
-        {/* <ClerkLoading>
-          <div> Loading ... </div>
-        </ClerkLoading>
-        <ClerkLoaded>
-          <UserButton />
-        </ClerkLoaded> */}
-        
-        {
-          isLoading ? <div>loading...</div> : <div>
-            {
-                data?.map( (account, ind) => (
-                  <>
-                    <div>
-                      { account.id }
-                    </div>
-                  </>
-                ))
-            }
-          </div>
-        }
+        <AccountsInputSheet />
+        {/* <AccountInputForm /> */}
       
     </div>
   )
