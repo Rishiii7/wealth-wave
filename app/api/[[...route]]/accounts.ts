@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 
 import { db } from "@/db/db";
-import { PostAccountInput } from "@/types/accounts";
+import { PostAccountInput, PostBulkDeleteInput } from "@/types/accounts";
 
 
 
@@ -16,7 +16,7 @@ const app = new Hono()
     try{
         const auth = getAuth(c);
 
-        console.log("[USER_ID] : " + auth?.userId)
+        // console.log("[USER_ID] : " + auth?.userId)
         
         if( ! auth?.userId ) {
             throw new Error("Unauthorized User");
@@ -32,13 +32,13 @@ const app = new Hono()
             }
         });
         
-        console.log( JSON.stringify(response));
+        // console.log( JSON.stringify(response));
         
         return c.json({
             message: response
         });
     } catch ( error: any){
-        console.log( error.message )
+        // console.log( error.message )
         throw new HTTPException( 401, {
            res: c.json({
             error: error.message
@@ -90,6 +90,45 @@ const app = new Hono()
                     message: error.message
                 })
             })
+        }
+    }
+)
+.post("/bulk-delete",
+    clerkMiddleware(),
+    zValidator(
+        "json",
+        PostBulkDeleteInput
+    ),
+    async (c) => {
+        try {
+
+            const auth =  getAuth(c);
+            const value = c.req.valid("json");
+            
+            // if(! auth?.userId) {
+            //     throw new Error("Unathorized");
+            // }
+
+            const response = await db.accounts.deleteMany({
+                where: {
+                    id: {
+                        in: value.ids
+                    }
+                },
+            });
+
+            // console.log('[POST BULK DELETE OPERATION RESPONSE] :  ' + JSON.stringify(response));
+
+            return c.json({
+                message: response
+            })
+
+
+
+        } catch( error : any) {
+            throw new HTTPException(500, {
+                message: error.message
+            });
         }
     }
 )

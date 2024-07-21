@@ -9,7 +9,8 @@ import {
   getPaginationRowModel,
   SortingState,
   ColumnFiltersState,
-  getFilteredRowModel
+  getFilteredRowModel,
+  Row
 } from "@tanstack/react-table";
 import { 
   Table, 
@@ -20,19 +21,20 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
-import { ChevronLeft, ChevronRight, Trash } from "lucide-react";
+import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { usePostBulkDelete } from "@/features/accounts/api/user-accounts";
   
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[]
+  data: TData[];
 }
 
 export const AccountsDataTable = <TData, TValue>({
   columns,
-  data
+  data,
 }: DataTableProps<TData, TValue>) => {
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -55,19 +57,28 @@ export const AccountsDataTable = <TData, TValue>({
       columnFilters,
       rowSelection
     } 
-  })
+  });
+
+  const deleteAccounts = usePostBulkDelete();
+
+  const onDelete = (rows: Row<TData>[] ) => {
+    const ids = rows.map( (row:any) => row.original.id);
+
+    // console.log("[DELETE ON SELECT] : " + JSON.stringify(ids));
+    deleteAccounts.mutate({ids: ids});
+  }
 
   return (
     <>
     <div>
       <div className="flex items-center justify-between">
-        {/* Filter Email */}  
+        {/* Filter Name */}  
         <div className="flex items-center py-4">
             <Input
-              placeholder="Filter emails..."
-              value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+              placeholder="Filter name..."
+              value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
               onChange={(event) =>
-                table.getColumn("email")?.setFilterValue(event.target.value)
+                table.getColumn("name")?.setFilterValue(event.target.value)
               }
               className="max-w-sm"
             />
@@ -76,9 +87,14 @@ export const AccountsDataTable = <TData, TValue>({
         <div className="flex">
           {
             table.getFilteredSelectedRowModel().rows.length > 0 ? (
-              <Button>
-                <Trash className="w-5 h-5 mr-2"/>
-                Delete
+              <Button
+                onClick={() => {
+                  onDelete(table.getSelectedRowModel().rows)
+
+                }}
+              >
+                <Trash2 className="w-5 h-5 mr-2"/>
+                Delete ({table.getFilteredSelectedRowModel().rows.length})
               </Button>
             ) : ""
           }

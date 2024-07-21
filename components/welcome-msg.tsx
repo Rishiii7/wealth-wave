@@ -7,8 +7,8 @@ export const WelcomeMsg = () => {
     const { user, isSignedIn } = useUser();
     if( !isSignedIn ) return null;
 
-    console.log( user.firstName );
-    console.log( "user : " + user.emailAddresses[0].emailAddress.charAt(0) );
+    // console.log( user.firstName );
+    // console.log( "user : " + user.emailAddresses[0].emailAddress.charAt(0) );
 
     return (
         <>

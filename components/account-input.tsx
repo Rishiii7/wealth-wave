@@ -28,6 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
 import { z } from "zod"
 import { usePostAccoutInput } from "@/features/accounts/api/user-accounts";
+import { Plus } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -63,7 +64,14 @@ export const AccountsInputSheet = () => {
         onOpenChange={setOpen}
       >
         <DialogTrigger asChild>
-          <Button>Open</Button>
+        <Button
+            className='w-full lg:max-w-56'
+            >
+              <Plus 
+                className='w-5 h-5 mr-2'
+              />
+            Add new
+          </Button>
         </DialogTrigger>
         <DialogContent className="">
         <DialogHeader className="items-center">

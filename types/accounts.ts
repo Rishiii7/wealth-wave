@@ -9,4 +9,8 @@ export const PostAccountInput = z.object({
     plaidId: z.string(),
 });
 
+export const PostBulkDeleteInput = z.object({
+    ids: z.array(z.string())
+});
+
 export type PostAccountInputType = z.infer<typeof PostAccountInput>

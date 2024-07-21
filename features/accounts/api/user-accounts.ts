@@ -1,5 +1,5 @@
 import { client } from "@/lib/hono";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { InferResponseType } from "hono";
 import { InferRequestType } from 'hono/client';
 import { toast } from "sonner";
@@ -39,7 +39,7 @@ export const usePostAccoutInput = () => {
     mutationKey: ["postAccountInput"],
     mutationFn: async (json) => {
 
-      console.log("inside usePostAccount function")
+      // console.log("inside usePostAccount function")
       const response = await client.api.accounts.$post({ json });
 
       return await response.json();
@@ -52,6 +52,39 @@ export const usePostAccoutInput = () => {
       toast("Something went wrong");
     }
   })
+
+  return mutation;
+}
+
+
+export const usePostBulkDelete = () => {
+
+  const query = useQueryClient();
+  
+  const mutation = useMutation<
+  InferResponseType< typeof client.api.accounts["bulk-delete"]["$post"]>,
+  Error,
+  InferRequestType<typeof client.api.accounts["bulk-delete"]["$post"]>["json"]
+  >({
+    mutationKey: ["postBulkDeleteAccount"],
+    mutationFn: async (json) => {
+      const response = await client.api.accounts["bulk-delete"]["$post"]({json});
+
+      if( !response.ok ) {
+        throw new Error("Failed to deleted Account");
+      }
+
+      
+      return await response.json();
+    },
+    onSuccess : () => {
+      query.invalidateQueries({ queryKey: ["postBulkDelete"]});
+      toast(`Accounts successfully deleted `);
+    },
+    onError: () => {
+      toast('Failed while deleting accounts')
+    }
+  });
 
   return mutation;
 }

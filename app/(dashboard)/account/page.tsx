@@ -1,34 +1,19 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Plus } from 'lucide-react';
+"use client";
 import React from 'react';
 
-import { Accounts, columns } from '@/components/accounts/accounts-table-columns';
+import {  columns } from '@/components/accounts/accounts-table-columns';
 import { AccountsDataTable } from '@/components/accounts/accounts-table';
+import { AccountsInputSheet } from '@/components/account-input';
+import { useGetAccounts, usePostBulkDelete } from '@/features/accounts/api/user-accounts';
+import { Row } from '@tanstack/react-table';
 
+const AccountsPage = () => {
 
-async function getData(): Promise<Accounts[]> {
-
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      username: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "success",
-      username: "a@example.com",
-    },
-  ]
-  
-}
-
-const AccountsPage = async () => {
-
-  const data = await getData();
+  // const data = await getData();
+  const data = useGetAccounts();
+  const accountDelets = usePostBulkDelete();
+  const accounts = data.data || []
+  // console.log( "[Data in accounts/page.tsx] : "  + JSON.stringify(data.data))
 
   return (
     <div className='-mt-16 flex flex-col items-center p-2 bg-slate-50 shadow-xl rounded-lg mx-4 '>
@@ -37,14 +22,15 @@ const AccountsPage = async () => {
           Acounts Page
         </div>
         <div className='w-full lg:flex lg:justify-end mr-10'>
-          <Button
+          {/* <Butto
             className='w-full lg:max-w-56'
             >
               <Plus 
                 className='w-5 h-5 mr-2'
               />
             Add new
-          </Button>
+          </Button> */}
+          <AccountsInputSheet />
         </div>
         
       </div>
@@ -52,7 +38,7 @@ const AccountsPage = async () => {
       <div className='container mx-auto py-10 text-center'>
           <AccountsDataTable
               columns={columns}
-              data={data}
+              data={accounts}
           />
       </div>
       

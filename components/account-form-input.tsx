@@ -36,7 +36,7 @@ export const AccountInputForm = () => {
       });
     
       function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log("in the submit")
+        // console.log("in the submit")
         console.log(values)
       }
     
