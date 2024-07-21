@@ -36,7 +36,21 @@ const formSchema = z.object({
   }),
 });
 
-export const AccountsInputSheet = () => {
+type AccountInputDialogProps = {
+  title: string;
+  data: {
+    id?: string;
+    name?: string;
+  } | null | undefined;
+  // onSubmit: () => void;
+
+}
+
+
+export const AccountsInputDialog = ({
+  title,
+  data
+}: AccountInputDialogProps) => {
   const [open, setOpen] = useState(false);
 
   const mutation = usePostAccoutInput();
@@ -46,7 +60,7 @@ export const AccountsInputSheet = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      name: data?.name,
     },
   });
 
@@ -64,18 +78,27 @@ export const AccountsInputSheet = () => {
         onOpenChange={setOpen}
       >
         <DialogTrigger asChild>
-        <Button
+        {
+          data ? (
+            <Button
+              className='w-full lg:max-w-56'
+            >
+              Edit
+            </Button>
+          ) : (
+          <Button
             className='w-full lg:max-w-56'
             >
               <Plus 
                 className='w-5 h-5 mr-2'
               />
             Add new
-          </Button>
+          </Button>)
+        }
         </DialogTrigger>
-        <DialogContent className="">
+        <DialogContent className="rounded-lg">
         <DialogHeader className="items-center">
-          <DialogTitle>Create New Account</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form

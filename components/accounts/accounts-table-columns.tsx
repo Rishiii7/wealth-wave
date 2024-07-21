@@ -1,19 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { InferResponseType } from "hono";
 import { client } from "@/lib/hono";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Actions } from "./actions";
 
 export type Accounts = InferResponseType<typeof client.api.accounts.$get>['message'][0]
 
@@ -59,31 +52,6 @@ export const columns: ColumnDef<Accounts>[] = [
     },
     {
         id: "actions",
-        cell: ({row}) => {
-            const account = row.original
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button>
-                            <span className="sr-only">Open Menu</span>
-                            <MoreHorizontal className="h-4 w-4"/>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                        onClick={() => navigator.clipboard.writeText(account.id)}
-                        >
-                        Copy Account ID
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                
-            )
-        }
+        cell: ({row}) => <Actions id={row.original.id}/>
     }
 ]

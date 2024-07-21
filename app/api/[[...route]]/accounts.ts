@@ -65,7 +65,8 @@ const app = new Hono()
 
             const response = await db.accounts.findUnique({
                 where:{
-                    id: id
+                    id: id,
+                    userId: auth.userId
                 },
                 select: {
                     id: true,

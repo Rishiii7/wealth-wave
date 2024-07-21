@@ -3,18 +3,17 @@ import React from 'react';
 
 import {  columns } from '@/components/accounts/accounts-table-columns';
 import { AccountsDataTable } from '@/components/accounts/accounts-table';
-import { AccountsInputSheet } from '@/components/account-input';
-import { useGetAccountByID, useGetAccounts, usePostBulkDelete } from '@/features/accounts/api/user-accounts';
-import { Row } from '@tanstack/react-table';
+import { AccountsInputDialog } from '@/components/account-input';
+import { useGetAccountByID, useGetAccounts} from '@/features/accounts/api/user-accounts';
+import { AccountEditDialogComponent } from '@/components/account-edit-dialog';
 
 const AccountsPage = () => {
 
   // const data = await getData();
   const data = useGetAccounts();
-  const accountDelets = usePostBulkDelete();
   const accountByID = useGetAccountByID("asasds");
 
-  console.log("[ACCOUNT BY ID] : " + JSON.stringify(accountByID.data));
+  console.log("[ACCOUNT BY ID] : " + JSON.stringify(accountByID.data?.name));
   const accounts = data.data || []
   // console.log( "[Data in accounts/page.tsx] : "  + JSON.stringify(data.data))
 
@@ -25,15 +24,13 @@ const AccountsPage = () => {
           Acounts Page
         </div>
         <div className='w-full lg:flex lg:justify-end mr-10'>
-          {/* <Butto
-            className='w-full lg:max-w-56'
-            >
-              <Plus 
-                className='w-5 h-5 mr-2'
-              />
-            Add new
-          </Button> */}
-          <AccountsInputSheet />
+          <AccountsInputDialog 
+            title='Create New Account'
+            data={null}  
+          />
+        </div>
+        <div className='w-full lg:flex lg:justify-end mr-10'>
+          <AccountEditDialogComponent title='Edit account'/>
         </div>
         
       </div>

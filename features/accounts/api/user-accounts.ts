@@ -90,9 +90,10 @@ export const usePostBulkDelete = () => {
 }
 
 
-export const useGetAccountByID = (id: string) => {
+export const useGetAccountByID = (id?: string) => {
   const query = useQuery({
-    queryKey: ["getAccountByID"],
+    enabled: !!id,
+    queryKey: [`acoountByID - ${id}`],
     queryFn: async () => {
         const response = await client.api.accounts[":id"]["$get"]({
           param : {
@@ -103,8 +104,9 @@ export const useGetAccountByID = (id: string) => {
         if( !response.ok) {
           throw new Error("Failed to fetch the data");
         }
+        const { data } = await response.json();
 
-        return await response.json();
+        return data;
     }
   });
 
