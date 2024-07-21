@@ -13,4 +13,8 @@ export const PostBulkDeleteInput = z.object({
     ids: z.array(z.string())
 });
 
+export const getAccountParamInput = z.object({
+    id: z.string()
+})
+
 export type PostAccountInputType = z.infer<typeof PostAccountInput>

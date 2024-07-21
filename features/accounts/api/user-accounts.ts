@@ -1,5 +1,5 @@
 import { client } from "@/lib/hono";
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { InferResponseType } from "hono";
 import { InferRequestType } from 'hono/client';
 import { toast } from "sonner";
@@ -87,4 +87,26 @@ export const usePostBulkDelete = () => {
   });
 
   return mutation;
+}
+
+
+export const useGetAccountByID = (id: string) => {
+  const query = useQuery({
+    queryKey: ["getAccountByID"],
+    queryFn: async () => {
+        const response = await client.api.accounts[":id"]["$get"]({
+          param : {
+            id
+          }
+        });
+
+        if( !response.ok) {
+          throw new Error("Failed to fetch the data");
+        }
+
+        return await response.json();
+    }
+  });
+
+  return query;
 }

@@ -4,7 +4,7 @@ import React from 'react';
 import {  columns } from '@/components/accounts/accounts-table-columns';
 import { AccountsDataTable } from '@/components/accounts/accounts-table';
 import { AccountsInputSheet } from '@/components/account-input';
-import { useGetAccounts, usePostBulkDelete } from '@/features/accounts/api/user-accounts';
+import { useGetAccountByID, useGetAccounts, usePostBulkDelete } from '@/features/accounts/api/user-accounts';
 import { Row } from '@tanstack/react-table';
 
 const AccountsPage = () => {
@@ -12,6 +12,9 @@ const AccountsPage = () => {
   // const data = await getData();
   const data = useGetAccounts();
   const accountDelets = usePostBulkDelete();
+  const accountByID = useGetAccountByID("asasds");
+
+  console.log("[ACCOUNT BY ID] : " + JSON.stringify(accountByID.data));
   const accounts = data.data || []
   // console.log( "[Data in accounts/page.tsx] : "  + JSON.stringify(data.data))
 

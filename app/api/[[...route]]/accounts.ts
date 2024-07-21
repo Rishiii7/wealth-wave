@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 
 import { db } from "@/db/db";
-import { PostAccountInput, PostBulkDeleteInput } from "@/types/accounts";
+import { getAccountParamInput, PostAccountInput, PostBulkDeleteInput } from "@/types/accounts";
 
 
 
@@ -46,6 +46,44 @@ const app = new Hono()
         });
     }
 })
+.get(
+    "/:id",
+    clerkMiddleware(),
+    zValidator("param", getAccountParamInput),
+    async (c) => {
+        try {
+            const auth = getAuth(c);
+            const id = c.req.param("id");
+
+            if( !auth?.userId) {
+                throw new Error(" Unauthorized ");
+            }
+            
+            if(!id) {
+                throw new Error(" Id required ");
+            }
+
+            const response = await db.accounts.findUnique({
+                where:{
+                    id: id
+                },
+                select: {
+                    id: true,
+                    name: true
+                }
+            });
+
+            return c.json({
+                data : response
+            });
+
+        } catch( error: any ) {
+            throw new HTTPException(500, {
+                message: error.message
+            });
+        }
+    }
+)
 .post("/",
     clerkMiddleware(),
     zValidator(
