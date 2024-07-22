@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { Button } from "./ui/button";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -22,12 +23,14 @@ type FormValues = z.input<typeof formSchema>;
 
 type AccountFormPorps = {
     defaultValues: FormValues;
-    onSubmit: (values: FormValues) => void
+    onSubmit: (values: FormValues) => void;
+    onClose: () => void;
 }
 
 export const AccountForm = ({
     defaultValues,
-    onSubmit
+    onSubmit,
+    onClose
 }: AccountFormPorps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -57,6 +60,12 @@ export const AccountForm = ({
           </FormItem>
         )}
       />
+
+      <div className="flex justify-center">
+        <Button>
+            Save Changes
+        </Button>
+      </div>
     </form>
   </Form></div>
   )

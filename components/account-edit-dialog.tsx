@@ -7,14 +7,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { DialogClose } from "@radix-ui/react-dialog";
-import { Button } from "./ui/button";
-
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
 import { z } from "zod"
-import { useGetAccountByID, usePostAccoutInput } from "@/features/accounts/api/user-accounts";
+import { useGetAccountByID, usePostAccoutInput, useUpdateAccountByID } from "@/features/accounts/api/user-accounts";
 import { Loader2 } from "lucide-react";
 import { useOpenEditAccount } from './hooks/open-edit-account';
 import { AccountForm } from "./account-form";
@@ -36,7 +32,7 @@ export const AccountEditDialogComponent = ({
   const {isOpen, onClose, id} = useOpenEditAccount()
 
   const accountQuery = useGetAccountByID(id);
-  const mutation = usePostAccoutInput();
+  const mutation = useUpdateAccountByID();
 
   const isLoading = accountQuery.isLoading;
 
@@ -54,9 +50,12 @@ export const AccountEditDialogComponent = ({
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // console.log("in the submit")
-    console.log("[EDIT ACCOUNT VALUES] : " + values);
-    mutation.mutate( values );
+    console.log("[EDIT ACCOUNT VALUES] : " + JSON.stringify(values));
+    console.log("[ID] : " + id)
+    if( !id ) return;
+    mutation.mutate( { id: id, name: values.name} );
     form.reset();
+    onClose();
   }
 
  
@@ -81,21 +80,12 @@ export const AccountEditDialogComponent = ({
           <AccountForm 
             defaultValues={defaultValues}
             onSubmit={onSubmit}
+            onClose={onClose}
           />
 
           </>
         }
-            <DialogClose 
-              asChild
-              className="w-full"
-            >
-              <Button
-                type="submit"
-                onClick={() => onClose()}
-              >
-                submit
-              </Button>
-            </DialogClose>
+        
         </DialogContent>
       </Dialog>
     </div>

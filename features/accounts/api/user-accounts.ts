@@ -111,4 +111,35 @@ export const useGetAccountByID = (id?: string) => {
   });
 
   return query;
+};
+
+
+export const useUpdateAccountByID = () => {
+  const query = useQueryClient();
+
+  const mutation = useMutation<
+  InferResponseType<typeof  client.api.accounts["update"]["$post"]>,
+  Error,
+  InferRequestType<typeof client.api.accounts["update"]["$post"]>["json"]
+  >({
+    mutationKey: [`updateAccountByID`],
+    mutationFn: async (json) => {
+      const response = await client.api.accounts["update"]["$post"]({json});
+
+      if( !response.ok ) {
+        throw new Error("Failed to uadte the Account");
+      }
+
+      return await response.json();
+    },
+    onSuccess: () => {
+      query.invalidateQueries({queryKey: [`updateAccountByID`]});
+      toast("Account Updated")
+    },
+    onError: () => {
+      toast("Failed to Update the Account");
+    }
+  });
+
+  return mutation;
 }

@@ -171,5 +171,50 @@ const app = new Hono()
         }
     }
 )
+.post("/update", 
+    clerkMiddleware(),
+    zValidator("json", z.object({
+        id: z.string(),
+        name: z.string()
+    })),
+    async ( c )  => {
+        const auth = getAuth(c);
+
+        try {
+            const { name, id } = c.req.valid("json");
+            if( !auth?.userId) {
+                throw new Error(" Unauthorized ");
+            }
+            
+            if( !name ) {
+                throw new Error(" No Update for name ");
+            }
+
+            const response = await db.accounts.update({
+                where: {
+                    id: id,
+                    userId: auth.userId,
+                },
+                data : {
+                    name: name
+                },
+                select: {
+                    id: true,
+                    name: true
+                }
+            });
+
+            return c.json({
+                data: response
+            });
+
+
+        } catch( error : any ) {
+            throw new HTTPException(500 , {
+                message: error.message
+            })
+        }
+    }
+)
 
 export default app;
