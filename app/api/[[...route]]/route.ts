@@ -3,6 +3,7 @@ import { handle } from "hono/vercel";
 import { prettyJSON } from "hono/pretty-json";
 import { cors } from "hono/cors";
 import accounts from "./accounts";
+import category from "./category";
 import { HTTPException } from "hono/http-exception";
 
 
@@ -20,7 +21,9 @@ app.onError( (err, c) => {
     }, 500);
 });
 
-const routes = app.route("/accounts", accounts);
+const routes = app
+.route("/accounts", accounts)
+.route("/category", category);
 
 export const GET = handle( app );
 export const POST = handle( app );

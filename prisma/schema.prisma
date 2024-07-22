@@ -19,3 +19,10 @@ model Accounts {
   name        String
   plaidId     String
 }
+
+model Category {
+  id          String      @id @default(cuid())
+  userId      String      
+  name        String
+  plaidId     String
+}
