@@ -18,6 +18,7 @@ model Accounts {
   userId      String      
   name        String
   plaidId     String
+  transcation Transcations[]
 }
 
 model Category {
@@ -25,4 +26,17 @@ model Category {
   userId      String      
   name        String
   plaidId     String
+  transaction Transcations[]
+}
+
+model Transcations {
+  id String @id @default(cuid())
+  amount Int 
+  payee String 
+  notes String
+  date DateTime
+  account Accounts @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId String
 }
