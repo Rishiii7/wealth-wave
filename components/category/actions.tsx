@@ -10,7 +10,7 @@ import {
   } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { useOpenEditAccount } from "../hooks/open-edit-account";
+import { useOpenEditCategory } from "../hooks/open-edit-category";
 
 export const Actions = ({
     id
@@ -18,7 +18,7 @@ export const Actions = ({
     id : string
 }) => {
 
-    const {onOpen}  = useOpenEditAccount();
+    const {onOpen}  = useOpenEditCategory();
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -26,7 +26,7 @@ export const Actions = ({
                     variant={"ghost"}
                 >
                     <span className="sr-only">Open Menu</span>
-                    <MoreHorizontal className="h-4 w-4"/>
+                    <MoreHorizontal className="h-5 w-5"/>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -34,7 +34,7 @@ export const Actions = ({
                 <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(id)}
                 >
-                Copy Account ID
+                Copy Category ID
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
@@ -43,7 +43,7 @@ export const Actions = ({
                         className="font-normal"
                         onClick={() => onOpen(id)}
                     >
-                        Edit Account
+                        Edit Category
                     </Button>
                 </DropdownMenuItem>
             </DropdownMenuContent>

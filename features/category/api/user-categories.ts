@@ -5,17 +5,17 @@ import { InferRequestType } from 'hono/client';
 import { toast } from "sonner";
 
 
-const $post = client.api.accounts.$post;
+const $post = client.api.category.$post;
 
-export const useGetAccounts = () => {
+export const useGetCategories = () => {
 
   const query = useQuery({
-    queryKey: ["account"],
+    queryKey: ["category"],
     queryFn: async () => {
-      const response = await client.api.accounts.$get();
+      const response = await client.api.category.$get();
 
       if( !response.ok ) {
-        throw new Error("Failed to fecth accounts");
+        throw new Error("Failed to fecth category");
       }
 
       const { message } = await response.json();
@@ -28,7 +28,7 @@ export const useGetAccounts = () => {
 }
 
 // Get user name from frontend
-export const usePostAccoutInput = () => {
+export const usePostCategoryInput = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<
@@ -36,17 +36,16 @@ export const usePostAccoutInput = () => {
   Error, 
   InferRequestType<typeof $post>["json"]
   >({
-    mutationKey: ["postAccountInput"],
+    mutationKey: ["postCategoryInput"],
     mutationFn: async (json) => {
 
-      // console.log("inside usePostAccount function")
-      const response = await client.api.accounts.$post({ json });
+      const response = await client.api.category.$post({ json });
 
       return await response.json();
     },
     onSuccess: () =>{
-      queryClient.invalidateQueries({ queryKey: ["accountsPost"]});
-      toast("Account created successfully");
+      queryClient.invalidateQueries({ queryKey: ["postCategoryInput"]});
+      toast("Category created successfully");
     },
     onError: () => {
       toast("Something went wrong");
@@ -62,27 +61,27 @@ export const usePostBulkDelete = () => {
   const query = useQueryClient();
   
   const mutation = useMutation<
-  InferResponseType< typeof client.api.accounts["bulk-delete"]["$post"]>,
+  InferResponseType< typeof client.api.category["bulk-delete"]["$post"]>,
   Error,
-  InferRequestType<typeof client.api.accounts["bulk-delete"]["$post"]>["json"]
+  InferRequestType<typeof client.api.category["bulk-delete"]["$post"]>["json"]
   >({
-    mutationKey: ["postBulkDeleteAccount"],
+    mutationKey: ["postBulkDeleteCategory"],
     mutationFn: async (json) => {
-      const response = await client.api.accounts["bulk-delete"]["$post"]({json});
+      const response = await client.api.category["bulk-delete"]["$post"]({json});
 
       if( !response.ok ) {
-        throw new Error("Failed to deleted Account");
+        throw new Error("Failed to deleted Category");
       }
 
       
       return await response.json();
     },
     onSuccess : () => {
-      query.invalidateQueries({ queryKey: ["postBulkDelete"]});
-      toast(`Accounts successfully deleted `);
+      query.invalidateQueries({ queryKey: ["postBulkDeleteCategory"]});
+      toast(`Categories successfully deleted `);
     },
     onError: () => {
-      toast('Failed while deleting accounts')
+      toast('Failed while deleting Categories')
     }
   });
 
@@ -90,12 +89,12 @@ export const usePostBulkDelete = () => {
 }
 
 
-export const useGetAccountByID = (id?: string) => {
+export const useGetCategoryByID = (id?: string) => {
   const query = useQuery({
     enabled: !!id,
     queryKey: [`acoountByID - ${id}`],
     queryFn: async () => {
-        const response = await client.api.accounts[":id"]["$get"]({
+        const response = await client.api.category[":id"]["$get"]({
           param : {
             id
           }
@@ -114,30 +113,30 @@ export const useGetAccountByID = (id?: string) => {
 };
 
 
-export const useUpdateAccountByID = () => {
+export const useUpdateCategoryByID = () => {
   const query = useQueryClient();
 
   const mutation = useMutation<
-  InferResponseType<typeof  client.api.accounts["update"]["$post"]>,
+  InferResponseType<typeof  client.api.category["update"]["$post"]>,
   Error,
-  InferRequestType<typeof client.api.accounts["update"]["$post"]>["json"]
+  InferRequestType<typeof client.api.category["update"]["$post"]>["json"]
   >({
-    mutationKey: [`updateAccountByID`],
+    mutationKey: [`updateCategoryByID`],
     mutationFn: async (json) => {
-      const response = await client.api.accounts["update"]["$post"]({json});
+      const response = await client.api.category["update"]["$post"]({json});
 
       if( !response.ok ) {
-        throw new Error("Failed to uadte the Account");
+        throw new Error("Failed to update the Category");
       }
 
       return await response.json();
     },
     onSuccess: () => {
-      query.invalidateQueries({queryKey: [`updateAccountByID`]});
-      toast("Account Updated")
+      query.invalidateQueries({queryKey: [`updateCategoryByID`]});
+      toast("Category Updated")
     },
     onError: () => {
-      toast("Failed to Update the Account");
+      toast("Failed to Update the Category");
     }
   });
 

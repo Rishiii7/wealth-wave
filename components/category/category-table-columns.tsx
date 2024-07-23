@@ -8,10 +8,10 @@ import { InferResponseType } from "hono";
 import { client } from "@/lib/hono";
 import { Actions } from "./actions";
 
-export type Accounts = InferResponseType<typeof client.api.accounts.$get>['message'][0]
+export type Category = InferResponseType<typeof client.api.category.$get>['message'][0]
 
 
-export const columns: ColumnDef<Accounts>[] = [
+export const columns: ColumnDef<Category>[] = [
     {
         id: "id",
         header: ({ table }) => (
@@ -24,6 +24,7 @@ export const columns: ColumnDef<Accounts>[] = [
             }
             onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
             aria-label="Select all"
+            id="checkbox-header"
             />
           </div>
         ),

@@ -26,7 +26,7 @@ const app = new Hono()
             throw new Error("Unauthorized User");
         }
 
-        const response = await db.accounts.findMany({
+        const response = await db.category.findMany({
             where:{
                 userId: auth.userId
             },
@@ -67,7 +67,7 @@ const app = new Hono()
                 throw new Error(" Id required ");
             }
 
-            const response = await db.accounts.findUnique({
+            const response = await db.category.findUnique({
                 where:{
                     id: id,
                     userId: auth.userId
@@ -110,7 +110,7 @@ const app = new Hono()
 
             // console.log("[NAME_IN_POST_BODY] : " + name);
 
-            const response = await db.accounts.create({
+            const response = await db.category.create({
                 data: {
                     userId: auth.userId,
                     name: name,
@@ -152,7 +152,7 @@ const app = new Hono()
             //     throw new Error("Unathorized");
             // }
 
-            const response = await db.accounts.deleteMany({
+            const response = await db.category.deleteMany({
                 where: {
                     id: {
                         in: value.ids
@@ -194,7 +194,7 @@ const app = new Hono()
                 throw new Error(" No Update for name ");
             }
 
-            const response = await db.accounts.update({
+            const response = await db.category.update({
                 where: {
                     id: id,
                     userId: auth.userId,

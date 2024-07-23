@@ -2,14 +2,12 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 import React, { useState } from 'react';
 import {
@@ -27,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
 import { z } from "zod"
-import { usePostAccoutInput } from "@/features/accounts/api/user-accounts";
+import { usePostCategoryInput } from "@/features/category/api/user-categories";
 import { Plus } from "lucide-react";
 
 const formSchema = z.object({
@@ -36,7 +34,7 @@ const formSchema = z.object({
   }),
 });
 
-type AccountInputDialogProps = {
+type CategoryInputDialogProps = {
   title: string;
   data: {
     id?: string;
@@ -47,13 +45,13 @@ type AccountInputDialogProps = {
 }
 
 
-export const AccountsInputDialog = ({
+export const CategoryInputDialog = ({
   title,
   data
-}: AccountInputDialogProps) => {
+}: CategoryInputDialogProps) => {
   const [open, setOpen] = useState(false);
 
-  const mutation = usePostAccoutInput();
+  const mutation = usePostCategoryInput();
 
   // console.log("[RESPONSE] : " + JSON.stringify(response));
 
@@ -110,10 +108,10 @@ export const AccountsInputDialog = ({
               name="name"
               render={ ({field}) => (
                 <FormItem>
-                  <FormLabel>Account Name</FormLabel>
+                  <FormLabel>Category Name</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="e.g Card, Cash"
+                      placeholder="e.g. Food, Travel "
                       {...field}
                     />
                   </FormControl>
