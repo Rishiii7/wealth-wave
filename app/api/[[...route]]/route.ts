@@ -4,6 +4,7 @@ import { prettyJSON } from "hono/pretty-json";
 import { cors } from "hono/cors";
 import accounts from "./accounts";
 import category from "./category";
+import transaction from "./transaction";
 import { HTTPException } from "hono/http-exception";
 
 
@@ -23,7 +24,8 @@ app.onError( (err, c) => {
 
 const routes = app
 .route("/accounts", accounts)
-.route("/category", category);
+.route("/category", category)
+.route("/transaction", transaction)
 
 export const GET = handle( app );
 export const POST = handle( app );
