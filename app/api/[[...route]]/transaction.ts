@@ -1,10 +1,11 @@
 import { db } from "@/db/db";
-import { GetTransactionById, GetTranscationByDate } from "@/types/transaction";
+import { BulkDeleteTransactionSchema, GetTransactionById, GetTranscationByDate, InsertTransactionSchema } from "@/types/transaction";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { parse, subDays } from "date-fns";
+import { z } from "zod";
 
 const app = new Hono()
 .get(
@@ -155,6 +156,132 @@ const app = new Hono()
         }
     }
 
+)
+.post(
+    "/",
+    clerkMiddleware(),
+    zValidator("json", InsertTransactionSchema.omit({
+        id: true
+    })),
+    async (c) => {
+        const auth = getAuth(c);
+
+        try {
+
+            const values = c.req.valid("json");
+
+            if( !auth?.userId ){
+                throw new Error("Unauthorized User");
+            }
+
+            const response = await db.transcations.create({
+                data: {
+                    ...values
+                }
+            });
+
+            return c.json({
+                data: response
+            });
+
+        } catch(error : any) {
+            throw new HTTPException(500, {
+                message: error.message
+            })
+        }
+    }
+)
+.post(
+    "/bulk-delete",
+    clerkMiddleware(),
+    zValidator("json", BulkDeleteTransactionSchema),
+    async (c) => {
+        const auth = getAuth(c);
+
+        try {
+            const {ids} = c.req.valid("json");
+
+            if( auth?.userId) {
+                throw new Error("Unauthorized User");
+            }
+
+            if( !ids ) {
+                throw new Error("Id's required");
+            }
+
+            const response = await db.transcations.deleteMany({
+                where: {
+                   AND: [
+                    {
+                        id: {
+                            in: ids
+                        }
+                    },
+                    {
+                        account:{
+                            userId: auth?.userId || ""
+                        }
+                    }
+                   ]
+                }
+            });
+
+        } catch( error : any) {
+            throw new HTTPException(500, {
+                message: error.message
+            })
+        }
+    }
+)
+.patch(
+    "/:id",
+    clerkMiddleware(),
+    zValidator("param", z.object({
+        id: z.string(),
+    })),
+    zValidator("json" , InsertTransactionSchema.omit({
+        id: true
+    })),
+    async (c) => {
+        const auth = getAuth(c);
+
+        try{
+            const id = c.req.param("id");
+            const values = c.req.valid("json");
+
+            if(!auth?.userId) {
+                throw new Error("Unauthorized user");
+            }
+            if(!id) {
+                throw new Error("Id required");
+            }
+
+            const response = await db.transcations.update({
+                where: {
+                    id: id,
+                    account: {
+                        userId: auth.userId
+                    }
+                },
+                data: {
+                    ...values
+                }
+            });
+
+            if( !response ) {
+                throw new Error("Transaction does not exist");
+            }
+
+            return c.json({
+                data: response
+            });
+
+        } catch(err:any) {
+            throw new HTTPException(500, {
+                message: err.message
+            })
+        }
+    }
 )
 
 
