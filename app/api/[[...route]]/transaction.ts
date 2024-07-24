@@ -226,6 +226,10 @@ const app = new Hono()
                 }
             });
 
+            return c.json({
+                data: response
+            });
+
         } catch( error : any) {
             throw new HTTPException(500, {
                 message: error.message
