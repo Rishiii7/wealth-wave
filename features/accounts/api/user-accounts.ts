@@ -92,7 +92,7 @@ export const usePostBulkDelete = () => {
 
 export const useGetAccountByID = (id?: string) => {
   const query = useQuery({
-    enabled: !!id,
+    // enabled: !!id,
     queryKey: [`acoountByID - ${id}`],
     queryFn: async () => {
         const response = await client.api.accounts[":id"]["$get"]({

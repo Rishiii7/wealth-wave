@@ -18,10 +18,13 @@ const app = new Hono()
         try{
 
             const { from, to, accountId } = c.req.valid("query");
+            console.log(accountId)
 
-            if( auth?.userId ) {
-                throw new Error("Unauthorized");
-            }
+            // if( !auth?.userId ) {
+            //     throw new Error("Unauthorized");
+            // }
+
+            // console.log(auth.userId);
 
             const dateTo = new Date();
             const dateFrom = subDays( dateTo, 30);
@@ -30,6 +33,7 @@ const app = new Hono()
             const endDate = to ? parse(to, "yyyy-MM-dd", new Date()) : dateTo;
 
             const response = await db.transcations.findMany({
+                relationLoadStrategy: "join",
                 where : {
                     AND: [
                         {
@@ -42,24 +46,22 @@ const app = new Hono()
                         },
                         {
                             date: {
-                                lte: startDate
+                                lte: endDate
                             }
                         },
-                        {
-                            account: {
-                                userId: auth?.userId || ""
-                            }
-                        }
+                        // {
+                        //     account: {
+                        //         userId: auth?.userId || ""
+                        //     }
+                        // }
                     ],
                 },
                 select: {
                     id: true,
                     date: true,
-                    categoryId: true,
                     payee: true,
                     amount: true,
                     notes: true,
-                    accountId: true,
                     account: {
                         select: {
                             name: true
@@ -98,9 +100,9 @@ const app = new Hono()
 
             const id = c.req.param("id");
 
-            if( auth?.userId ) {
-                throw new Error("Unauthorized");
-            }
+            // if( !auth?.userId ) {
+            //     throw new Error("Unauthorized");
+            // }
 
             if( !id ) {
                 throw new Error("Id required to fetch data");
@@ -112,22 +114,23 @@ const app = new Hono()
                         {
                             categoryId: id
                         },
-                        {
-                            category: {
-                                userId: auth?.userId || ""
-                            }
-                        },
+                        // {
+                        //     category: {
+                        //         userId: auth?.userId || ""
+                        //     }
+                        // },
                         
                     ],
                 },
                 select: {
                     id: true,
-                    date: true,
+                    // date: true,
                     categoryId: true,
                     payee: true,
                     amount: true,
                     notes: true,
                     accountId: true,
+                    createdAt: true,
                     account: {
                         select: {
                             name: true
@@ -137,7 +140,7 @@ const app = new Hono()
                         select:{
                             name: true
                         }
-                    }
+                    },
                 },
             });
 
@@ -167,24 +170,28 @@ const app = new Hono()
         const auth = getAuth(c);
 
         try {
-
+            console.log("INSIDE TRANSACTION POST");
             const values = c.req.valid("json");
 
-            if( !auth?.userId ){
-                throw new Error("Unauthorized User");
-            }
+            // if( !auth?.userId ){
+            //     throw new Error("Unauthorized User");
+            // }
+            console.log( values );
+            const currentDate = new Date().toISOString();
+            console.log(currentDate)
 
             const response = await db.transcations.create({
                 data: {
-                    ...values
+                    ...values,
                 }
-            });
+            })
 
             return c.json({
                 data: response
             });
 
         } catch(error : any) {
+            console.log(JSON.stringify(error))
             throw new HTTPException(500, {
                 message: error.message
             })

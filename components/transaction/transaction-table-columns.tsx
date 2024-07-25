@@ -1,0 +1,151 @@
+"use client";
+
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { InferResponseType } from "hono";
+import { client } from "@/lib/hono";
+import { Actions } from "./actions";
+
+export type Transaction = InferResponseType<typeof client.api.transaction["$get"]>['data'][0]
+
+
+export const columns: ColumnDef<Transaction>[] = [
+    {
+        id: "id",
+        header: ({ table }) => (
+          <div className="flex justify-center">
+
+          <Checkbox
+            checked={
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && "indeterminate")
+            }
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all"
+            id="checkbox-header"
+            />
+          </div>
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        ),
+    },
+    {
+        accessorKey: "amount",
+        header: ({column}) => {
+            return (
+                <div className="flex justify-center">
+
+                <Button
+                    variant={"ghost"}
+                    onClick={ ()=> column.toggleSorting(column.getIsSorted() ==="asc")}
+                    className="text-center text-lg "
+                    >
+                    Amount 
+                    <ArrowUpDown className="ml-2 h-4 w-4"/>
+                </Button>
+                    </div>
+            )
+        },
+    },
+    {
+      accessorKey: "payee",
+      header: ({column}) => {
+          return (
+              <div className="flex justify-center">
+
+              <Button
+                  variant={"ghost"}
+                  onClick={ ()=> column.toggleSorting(column.getIsSorted() ==="asc")}
+                  className="text-center text-lg "
+                  >
+                  Payee 
+                  <ArrowUpDown className="ml-2 h-4 w-4"/>
+              </Button>
+                  </div>
+          )
+      },
+    },
+    {
+      accessorKey: "account",
+      header: ({column}) => {
+          return (
+              <div className="flex justify-center">
+
+              <Button
+                  variant={"ghost"}
+                  onClick={ ()=> column.toggleSorting(column.getIsSorted() ==="asc")}
+                  className="text-center text-lg "
+                  >
+                  Account Name 
+                  <ArrowUpDown className="ml-2 h-4 w-4"/>
+              </Button>
+                  </div>
+          )
+      },
+    },
+    {
+      accessorKey: "notes",
+      header: ({column}) => {
+          return (
+              <div className="flex justify-center">
+
+              <Button
+                  variant={"ghost"}
+                  onClick={ ()=> column.toggleSorting(column.getIsSorted() ==="asc")}
+                  className="text-center text-lg "
+                  >
+                  Notes 
+                  <ArrowUpDown className="ml-2 h-4 w-4"/>
+              </Button>
+                  </div>
+          )
+      },
+    },
+    {
+      accessorKey: "date",
+      header: ({column}) => {
+          return (
+              <div className="flex justify-center">
+
+              <Button
+                  variant={"ghost"}
+                  onClick={ ()=> column.toggleSorting(column.getIsSorted() ==="asc")}
+                  className="text-center text-lg "
+                  >
+                  Date 
+                  <ArrowUpDown className="ml-2 h-4 w-4"/>
+              </Button>
+                  </div>
+          )
+      },
+    },
+    {
+      accessorKey: "category",
+      header: ({column}) => {
+          return (
+              <div className="flex justify-center">
+
+              <Button
+                  variant={"ghost"}
+                  onClick={ ()=> column.toggleSorting(column.getIsSorted() ==="asc")}
+                  className="text-center text-lg "
+                  >
+                  Category Name 
+                  <ArrowUpDown className="ml-2 h-4 w-4"/>
+              </Button>
+                  </div>
+          )
+      },
+    },
+    {
+        id: "actions",
+        cell: ({row}) => <Actions id={row.original.id}/>
+    }
+]

@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { Button } from "../ui/button";
-import { Category } from './category-table-columns';
 
 const formSchema = z.object({
     name: z.string().min(2, {

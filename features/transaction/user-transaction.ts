@@ -8,9 +8,9 @@ export const useGetTransactionByAccountId = ({
     to,
     accountId
 }: {
-    from: string,
-    to: string,
-    accountId: string,
+    from?: string,
+    to?: string,
+    accountId?: string,
 }) => {
     const query = useQuery({
         queryKey: ["transactions"],
@@ -26,7 +26,18 @@ export const useGetTransactionByAccountId = ({
             if( !response.ok ) {
                 throw new Error("Failed to fetch the transactions");
             }
-
+            const data = await response.json();
+            const emptyList : any= [];
+            const newData = {
+                data: data.data.map((filed) => {
+                    emptyList.push({...filed,
+                        account: filed.account.name,
+                        category: filed.category.name
+                    })
+                })
+            }
+            console.log(emptyList)
+            console.log("[Resposne in Transaction Mutattion] : " + JSON.stringify(newData))
             return await response.json();
         }
     });
@@ -69,6 +80,8 @@ export const useCreateTransaction = () => {
     >({
         mutationKey: ['transaction'],
         mutationFn: async (json) => {
+            console.log("INSIDE THE TRANSACTION CREATE MUSTATION");
+            console.log("[DATE IN MUTATION]" + JSON.stringify(json))
 
             const response = await client.api.transaction.$post({json});
 

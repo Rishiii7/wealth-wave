@@ -13,9 +13,9 @@ export const GetTransactionById = z.object({
 export const InsertTransactionSchema = z.object({
     id:         z.string(),
     amount:     z.number(), 
-    payee:      z.string(), 
-    notes:      z.string(),
-    date:       z.date(), 
+    payee:      z.string(),
+    date:       z.coerce.date(), 
+    notes:      z.string().optional(),
     accountId:  z.string(),
     categoryId: z.string()
 });
