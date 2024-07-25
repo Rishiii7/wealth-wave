@@ -27,18 +27,17 @@ export const useGetTransactionByAccountId = ({
                 throw new Error("Failed to fetch the transactions");
             }
             const data = await response.json();
-            const emptyList : any= [];
             const newData = {
-                data: data.data.map((filed) => {
-                    emptyList.push({...filed,
-                        account: filed.account.name,
-                        category: filed.category.name
-                    })
+                data: data.data.map((field) => {
+                    return {
+                        ...field,
+                        account: field.account.name,
+                        category: field.category.name
+                    }
                 })
-            }
-            console.log(emptyList)
+            };
             console.log("[Resposne in Transaction Mutattion] : " + JSON.stringify(newData))
-            return await response.json();
+            return newData;
         }
     });
 

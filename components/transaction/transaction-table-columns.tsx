@@ -8,7 +8,12 @@ import { InferResponseType } from "hono";
 import { client } from "@/lib/hono";
 import { Actions } from "./actions";
 
-export type Transaction = InferResponseType<typeof client.api.transaction["$get"]>['data'][0]
+type TransactionResponse = InferResponseType<typeof client.api.transaction["$get"]>['data'][0];
+
+export type Transaction = Omit<TransactionResponse, "account"| "category"> & {
+    category: string;
+    account: string;
+}
 
 
 export const columns: ColumnDef<Transaction>[] = [

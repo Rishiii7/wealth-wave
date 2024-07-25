@@ -1,16 +1,13 @@
 "use client";
 import React from 'react';
 
+
 import { columns } from '@/components/transaction/transaction-table-columns';
-import { CategoryDataTable } from '@/components/category/category-table';
-
-import { useGetCategories } from '@/features/category/api/user-categories';
-
 import { TransactionInputDialog } from '@/components/transaction/transaction-input';
 import { TransactionEditDialog } from '@/components/transaction/transaction-edit-dialog';
-import { useGetAccountByID } from '@/features/accounts/api/user-accounts';
-import { useGetTransactionByAccountId } from '@/features/transaction/user-transaction';
 import { TransactionDataTable } from '@/components/transaction/transaction-table';
+
+import { useGetTransactionByAccountId } from '@/features/transaction/user-transaction';
 
 const TransactionPage = () => {
   const data = useGetTransactionByAccountId({});
