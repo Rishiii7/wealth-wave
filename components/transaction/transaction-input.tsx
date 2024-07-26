@@ -20,6 +20,7 @@ import { InsertTransactionSchema } from "@/types/transaction";
 
 import { useCreateTransaction, useGetTransactionByAccountId } from "@/features/transaction/user-transaction";
 import { useGetAccountByID, useGetAccounts } from "@/features/accounts/api/user-accounts";
+import { useGetCategories } from "@/features/category/api/user-categories";
 
 
 
@@ -39,8 +40,10 @@ export const TransactionInputDialog = ({
 
   const mutation = useCreateTransaction();
   const accountQuery = useGetAccounts();
+  const categoryQuery = useGetCategories();
 
   console.log("[GET_ALL_ACCOUNT]" + JSON.stringify(accountQuery.data))
+  console.log("[GET_ALL_Category]" + JSON.stringify(categoryQuery.data))
 
   // console.log("[RESPONSE] : " + JSON.stringify(response));
   const defaultValues = {
@@ -61,8 +64,8 @@ export const TransactionInputDialog = ({
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // console.log("in the submit")
-    console.log("[TRANSACTION FORM VALUES]"+ JSON.stringify(values));
-    // mutation.mutate( values );
+    // console.log("[TRANSACTION FORM VALUES]"+ JSON.stringify(values));
+    mutation.mutate( values );
     form.reset();
     setOpen(false);
   }
@@ -91,7 +94,7 @@ export const TransactionInputDialog = ({
             defaultValues={defaultValues}
             onSubmit={onSubmit}
             accountData = {accountQuery.data || []} 
-          
+            categoryData = {categoryQuery.data || []}
           />
         </DialogContent>
       </Dialog>

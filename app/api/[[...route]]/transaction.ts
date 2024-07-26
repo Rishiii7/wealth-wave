@@ -208,7 +208,7 @@ const app = new Hono()
         try {
             const {ids} = c.req.valid("json");
 
-            if( auth?.userId) {
+            if( !auth?.userId) {
                 throw new Error("Unauthorized User");
             }
 
@@ -218,17 +218,17 @@ const app = new Hono()
 
             const response = await db.transcations.deleteMany({
                 where: {
-                   AND: [
+                   OR: [
                     {
                         id: {
                             in: ids
                         }
                     },
-                    {
-                        account:{
-                            userId: auth?.userId || ""
-                        }
-                    }
+                    // {
+                    //     account:{
+                    //         userId: auth?.userId || ""
+                    //     }
+                    // }
                    ]
                 }
             });
@@ -270,9 +270,9 @@ const app = new Hono()
             const response = await db.transcations.update({
                 where: {
                     id: id,
-                    account: {
-                        userId: auth.userId
-                    }
+                    // account: {
+                    //     userId: auth.userId
+                    // }
                 },
                 data: {
                     ...values

@@ -38,12 +38,17 @@ type TransactionFormPorps = {
       id: string;
       name: string;
     }[];
+    categoryData: {
+      id: string;
+      name: string;
+    }[];
 }
 
 export const TransactionForm = ({
     defaultValues,
     onSubmit,
-    accountData
+    accountData,
+    categoryData
 }: TransactionFormPorps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -180,6 +185,67 @@ export const TransactionForm = ({
                             key={data.id}
                             onSelect={() => {
                               form.setValue("accountId", data.id)
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                data.id === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {data.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Category Name */}
+        <FormField
+          control={form.control}
+          name="categoryId"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Category</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? categoryData.find(
+                            (data) => data.id === field.value
+                          )?.name
+                        : "Select Category"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search Category..." />
+                    <CommandList>
+                      <CommandEmpty>No Category found.</CommandEmpty>
+                      <CommandGroup>
+                        {categoryData.map((data) => (
+                          <CommandItem
+                            value={data.name}
+                            key={data.id}
+                            onSelect={() => {
+                              form.setValue("categoryId", data.id)
                             }}
                           >
                             <Check

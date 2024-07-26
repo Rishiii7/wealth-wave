@@ -36,7 +36,7 @@ export const useGetTransactionByAccountId = ({
                     }
                 })
             };
-            console.log("[Resposne in Transaction Mutattion] : " + JSON.stringify(newData))
+            // console.log("[Resposne in Transaction Mutattion] : " + JSON.stringify(newData))
             return newData;
         }
     });
@@ -104,6 +104,7 @@ export const useCreateTransaction = () => {
 
 export const useBulkDeleteTransaction = () => {
     const query = useQueryClient();
+    console.log("[INSIDE THE BULK DELETE TRAANSACTION]")
 
     const mutation = useMutation<
     InferResponseType<typeof client.api.transaction["bulk-delete"]["$post"]>,
@@ -112,6 +113,7 @@ export const useBulkDeleteTransaction = () => {
     >({
         mutationKey: ["transaction"],
         mutationFn: async (json) => {
+            console.log('[JSON IN BULK DELETE TRANSACTION]: ' + JSON.stringify(json))
             const response = await client.api.transaction["bulk-delete"]["$post"]({json});
 
             if(!response.ok){

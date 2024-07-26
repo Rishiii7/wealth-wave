@@ -25,6 +25,7 @@ import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { usePostBulkDelete } from "@/features/category/api/user-categories";
+import { useBulkDeleteTransaction } from "@/features/transaction/user-transaction";
   
 
 interface DataTableProps<TData, TValue> {
@@ -59,13 +60,13 @@ export const TransactionDataTable = <TData, TValue>({
     } 
   });
 
-  const deleteCategories = usePostBulkDelete();
+  const deleteTransactions = useBulkDeleteTransaction();
 
   const onDelete = (rows: Row<TData>[] ) => {
     const ids = rows.map( (row:any) => row.original.id);
 
-    // console.log("[DELETE ON SELECT] : " + JSON.stringify(ids));
-    deleteCategories.mutate({ids: ids});
+    console.log("[DELETE ON SELECT] : " + JSON.stringify(ids));
+    deleteTransactions.mutate({ids: ids});
   }
 
   return (
@@ -90,7 +91,6 @@ export const TransactionDataTable = <TData, TValue>({
               <Button
                 onClick={() => {
                   onDelete(table.getSelectedRowModel().rows)
-
                 }}
               >
                 <Trash2 className="w-5 h-5 mr-2"/>

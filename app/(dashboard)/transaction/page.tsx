@@ -34,10 +34,6 @@ const TransactionPage = () => {
           title='Edit Transaction'
         />
       </div>
-      {/* Testing combobox Form Component */}
-      <div>
-        <ComboboxDemo />
-      </div>
 
       <div className='container mx-auto py-10 text-center'>
           <TransactionDataTable
