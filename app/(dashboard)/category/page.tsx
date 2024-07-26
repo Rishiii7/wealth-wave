@@ -24,12 +24,12 @@ const CategoryPage = () => {
             data={null}  
           />
         </div>
-        <div className='w-full lg:flex lg:justify-end mr-10'>
-          <CategoryEditDialogComponent 
-            title='Edit category'
-          />
-        </div>
         
+      </div>
+      <div className='w-full lg:flex lg:justify-end mr-10'>
+        <CategoryEditDialogComponent 
+          title='Edit category'
+        />
       </div>
 
       <div className='container mx-auto py-10 text-center'>

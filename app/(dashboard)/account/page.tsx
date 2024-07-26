@@ -26,10 +26,10 @@ const AccountsPage = () => {
             data={null}  
           />
         </div>
-        <div className='w-full lg:flex lg:justify-end mr-10'>
-          <AccountEditDialogComponent title='Edit account'/>
-        </div>
         
+      </div>
+      <div className='w-full lg:flex lg:justify-end mr-10'>
+        <AccountEditDialogComponent title='Edit account'/>
       </div>
 
       <div className='container mx-auto py-10 text-center'>
