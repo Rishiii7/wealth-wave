@@ -21,11 +21,12 @@ import { Button } from "../ui/button";
 import { InsertTransactionSchema } from "@/types/transaction";
 import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
 
 
 const formSchema = InsertTransactionSchema.omit({
-  id: true
+  id: true,
 });
   
 type FormValues = z.input<typeof formSchema>;
@@ -33,11 +34,16 @@ type FormValues = z.input<typeof formSchema>;
 type TransactionFormPorps = {
     defaultValues?: FormValues;
     onSubmit: (values: FormValues) => void;
+    accountData : {
+      id: string;
+      name: string;
+    }[];
 }
 
 export const TransactionForm = ({
     defaultValues,
     onSubmit,
+    accountData
 }: TransactionFormPorps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -81,7 +87,7 @@ export const TransactionForm = ({
             <FormLabel>Payee Name</FormLabel>
             <FormControl>
               <Input 
-                placeholder="$100"
+                placeholder="e.g Rishi"
                 {...field}
               />
             </FormControl>
@@ -135,7 +141,85 @@ export const TransactionForm = ({
             </FormItem>
           )}
         />
-
+        {/* Account Name */}
+        <FormField
+          control={form.control}
+          name="accountId"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Account</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? accountData.find(
+                            (data) => data.id === field.value
+                          )?.name
+                        : "Select Account"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search Account..." />
+                    <CommandList>
+                      <CommandEmpty>No Account found.</CommandEmpty>
+                      <CommandGroup>
+                        {accountData.map((data) => (
+                          <CommandItem
+                            value={data.name}
+                            key={data.id}
+                            onSelect={() => {
+                              form.setValue("accountId", data.id)
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                data.id === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {data.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Notes */}
+        <FormField 
+          control={form.control}
+          name="notes"
+          render={ ({field}) => (
+            <FormItem>
+              <FormLabel>Notes</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="Get from Safeway"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>This will publicly display your name</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       <div className="flex justify-center">
         <Button>
             Save Changes

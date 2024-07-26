@@ -8,12 +8,13 @@ import { TransactionEditDialog } from '@/components/transaction/transaction-edit
 import { TransactionDataTable } from '@/components/transaction/transaction-table';
 
 import { useGetTransactionByAccountId } from '@/features/transaction/user-transaction';
+import { ComboboxDemo } from '@/components/TestComponent';
 
 const TransactionPage = () => {
   const data = useGetTransactionByAccountId({});
   const transaction = data.data?.data || []
 
-  console.log('[TRANSACTION DATA FETCH] : '+ JSON.stringify(transaction))
+  // console.log('[TRANSACTION DATA FETCH] : '+ JSON.stringify(transaction))
 
   return (
     <div className='-mt-16 flex flex-col items-center p-2 bg-slate-50 shadow-xl rounded-lg mx-4 '>
@@ -32,6 +33,10 @@ const TransactionPage = () => {
         <TransactionEditDialog 
           title='Edit Transaction'
         />
+      </div>
+      {/* Testing combobox Form Component */}
+      <div>
+        <ComboboxDemo />
       </div>
 
       <div className='container mx-auto py-10 text-center'>

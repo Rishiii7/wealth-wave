@@ -18,12 +18,13 @@ import { TransactionForm } from "@/components/transaction/transaction-form";
 
 import { InsertTransactionSchema } from "@/types/transaction";
 
-import { useCreateTransaction } from "@/features/transaction/user-transaction";
+import { useCreateTransaction, useGetTransactionByAccountId } from "@/features/transaction/user-transaction";
+import { useGetAccountByID, useGetAccounts } from "@/features/accounts/api/user-accounts";
 
 
 
 const formSchema = InsertTransactionSchema.omit({
-  id: true
+  id: true,
 })
 
 type TransactionInputDialogProps = {
@@ -37,15 +38,20 @@ export const TransactionInputDialog = ({
   const [open, setOpen] = useState(false);
 
   const mutation = useCreateTransaction();
+  const accountQuery = useGetAccounts();
+
+  console.log("[GET_ALL_ACCOUNT]" + JSON.stringify(accountQuery.data))
 
   // console.log("[RESPONSE] : " + JSON.stringify(response));
   const defaultValues = {
     amount: 0,
     payee: "",
     date: new Date(),
-    accountId: "clz0jfj9z0006vx1s4gyq9aak",
+    accountId: "",
     notes: "",
-    categoryId: "clz0jfxf30007vx1sp8lc9knk",
+    categoryId: "",
+    account: "",
+    category: ""
   }
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -56,7 +62,7 @@ export const TransactionInputDialog = ({
   function onSubmit(values: z.infer<typeof formSchema>) {
     // console.log("in the submit")
     console.log("[TRANSACTION FORM VALUES]"+ JSON.stringify(values));
-    mutation.mutate( values );
+    // mutation.mutate( values );
     form.reset();
     setOpen(false);
   }
@@ -83,7 +89,8 @@ export const TransactionInputDialog = ({
         </DialogHeader>
           <TransactionForm
             defaultValues={defaultValues}
-            onSubmit={onSubmit} 
+            onSubmit={onSubmit}
+            accountData = {accountQuery.data || []} 
           
           />
         </DialogContent>

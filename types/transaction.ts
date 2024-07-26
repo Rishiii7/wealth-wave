@@ -23,3 +23,4 @@ export const InsertTransactionSchema = z.object({
 export const BulkDeleteTransactionSchema = z.object({
     ids: z.array(z.string())
 });
+
