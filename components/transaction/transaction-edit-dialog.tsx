@@ -10,16 +10,18 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
 import { z } from "zod"
-import { useGetCategoryByID, useUpdateCategoryByID } from "@/features/category/api/user-categories";
+import { useGetCategories, useGetCategoryByID, useUpdateCategoryByID } from "@/features/category/api/user-categories";
 import { Loader2 } from "lucide-react";
 import { useOpenEditCategory } from "../hooks/open-edit-category";
 import { TransactionForm } from "./transaction-form";
+import { InsertTransactionSchema } from "@/types/transaction";
+import { useOpenEditTransaction } from "../hooks/open-edit-transaction";
+import { useGetTransactionByAccountId, useGetTransactionByID, useUpdateTransactionById } from "@/features/transaction/user-transaction";
+import { useGetAccounts } from "@/features/accounts/api/user-accounts";
 
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+const formSchema = InsertTransactionSchema.omit({
+  id: true
 });
 
 type TransactionEditDialogProps = {
@@ -30,18 +32,32 @@ type TransactionEditDialogProps = {
 export const TransactionEditDialog = ({
   title,
 }: TransactionEditDialogProps) => {
-  const {isOpen, onClose, id} = useOpenEditCategory()
+  const {isOpen, onClose, id} = useOpenEditTransaction();
 
-  const categoryQuery = useGetCategoryByID(id);
-  const mutation = useUpdateCategoryByID();
+  console.log('[EDIT TRANSACTION ID] : ' + id);
 
-  const isLoading = categoryQuery.isLoading;
+  const transactionQuery = useGetTransactionByID(id);
+  const mutation = useUpdateTransactionById(id);
+  const accountQuery = useGetAccounts();
+  const categoryQuery = useGetCategories();
 
-  console.log("[TransactionEditDialog] : " + JSON.stringify(categoryQuery.data));
-  const defaultValues = categoryQuery.data ? {
-    name: categoryQuery.data.name
+  const isLoading = transactionQuery.isLoading || accountQuery.isLoading || categoryQuery.isLoading;
+
+  console.log("[TransactionEditDialog] : " + JSON.stringify(transactionQuery.data));
+  const defaultValues = transactionQuery.data && id ? {
+     amount: transactionQuery.data.amount,
+     payee: transactionQuery.data.payee,
+     notes: transactionQuery.data.notes || undefined,
+     date: new Date(transactionQuery.data.date),
+     accountId: transactionQuery.data.accountId,
+     categoryId: transactionQuery.data.categoryId,
   } : {
-    name: ""
+    amount: 0,
+    payee: "",
+    date: new Date(),
+    accountId: "",
+    notes: "",
+    categoryId: "",
   }
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,10 +67,10 @@ export const TransactionEditDialog = ({
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // console.log("in the submit")
-    console.log("[EDIT CATEGORY VALUES] : " + JSON.stringify(values));
+    console.log("[EDIT Transaction VALUES] : " + JSON.stringify(values));
     console.log("[ID] : " + id)
     if( !id ) return;
-    mutation.mutate( { id: id, name: values.name} );
+    mutation.mutate( { ...values} );
     form.reset();
     onClose();
   }
@@ -81,6 +97,8 @@ export const TransactionEditDialog = ({
           <TransactionForm 
             defaultValues={defaultValues}
             onSubmit={onSubmit}
+            accountData={accountQuery.data || []}
+            categoryData={categoryQuery.data || []}
           />
 
           </>

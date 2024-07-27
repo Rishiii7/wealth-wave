@@ -24,7 +24,6 @@ import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { usePostBulkDelete } from "@/features/category/api/user-categories";
 import { useBulkDeleteTransaction } from "@/features/transaction/user-transaction";
   
 

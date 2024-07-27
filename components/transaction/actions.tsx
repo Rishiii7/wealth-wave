@@ -10,7 +10,8 @@ import {
   } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { useOpenEditCategory } from "../hooks/open-edit-category";
+import { useOpenEditTransaction } from "../hooks/open-edit-transaction";
+
 
 export const Actions = ({
     id
@@ -18,7 +19,7 @@ export const Actions = ({
     id : string
 }) => {
 
-    const {onOpen}  = useOpenEditCategory();
+    const {onOpen}  = useOpenEditTransaction();
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -34,7 +35,7 @@ export const Actions = ({
                 <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(id)}
                 >
-                Copy Category ID
+                Copy Transaction ID
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
@@ -43,7 +44,7 @@ export const Actions = ({
                         className="font-normal"
                         onClick={() => onOpen(id)}
                     >
-                        Edit Category
+                        Edit Transaction
                     </Button>
                 </DropdownMenuItem>
             </DropdownMenuContent>

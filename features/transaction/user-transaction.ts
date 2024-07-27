@@ -44,30 +44,54 @@ export const useGetTransactionByAccountId = ({
     return query;
 };
 
-export const useGetTransactionByCategoryId = ({
-    id
-}: {
-    id: string
-}) => {
+// export const useGetTransactionByCategoryId = ({
+//     id
+// }: {
+//     id: string
+// }) => {
+//     const query = useQuery({
+//         queryKey: ['transaction'],
+//         queryFn: async () => {
+//             const response = await client.api.transaction[":categoryId"]["$get"]({
+//                 param: {
+//                     id
+//                 }
+//             });
+
+//             if( !response.ok  ){
+//                 throw new Error("Failed to fetch the transaction");
+//             }
+
+//             return await response.json();
+//         }
+//     });
+
+//     return query;
+// };
+
+export const useGetTransactionByID = (id?: string) => {
+    console.log(id)
     const query = useQuery({
-        queryKey: ['transaction'],
+        enabled: !!id,
+        queryKey: [`transaction-${id}`],
         queryFn: async () => {
             const response = await client.api.transaction[":id"]["$get"]({
-                param: {
+                param : {
                     id
                 }
             });
 
-            if( !response.ok  ){
+            if( !response.ok ) {
                 throw new Error("Failed to fetch the transaction");
             }
-
-            return await response.json();
+            const { data } = await response.json();
+            console.log('[DATA FROM useGetTransactionByID]: ' + JSON.stringify(data))
+            return data[0];
         }
     });
 
     return query;
-};
+}
 
 export const useCreateTransaction = () => {
     const query = useQueryClient();
@@ -111,7 +135,7 @@ export const useBulkDeleteTransaction = () => {
     Error,
     InferRequestType<typeof client.api.transaction["bulk-delete"]["$post"]>["json"]
     >({
-        mutationKey: ["transaction"],
+        mutationKey: ["transaction-bulk"],
         mutationFn: async (json) => {
             console.log('[JSON IN BULK DELETE TRANSACTION]: ' + JSON.stringify(json))
             const response = await client.api.transaction["bulk-delete"]["$post"]({json});
@@ -134,7 +158,7 @@ export const useBulkDeleteTransaction = () => {
     return mutation;
 };
 
-export const useUpdateTransactionById = (id: string) => {
+export const useUpdateTransactionById = (id?: string) => {
     const query = useQueryClient();
 
     const mutation = useMutation<
@@ -142,7 +166,7 @@ export const useUpdateTransactionById = (id: string) => {
     Error,
     InferRequestType<typeof client.api.transaction[":id"]["$patch"]>["json"]
     >({
-        mutationKey: ['transaction'],
+        mutationKey: [`transaction-${id}`],
         mutationFn: async (json) => {
             const response = await client.api.transaction[":id"]["$patch"]({
                 param: {
@@ -158,7 +182,7 @@ export const useUpdateTransactionById = (id: string) => {
             return await response.json();
         },
         onSuccess:  () => {
-            query.invalidateQueries({queryKey: ["transaction"]});
+            query.invalidateQueries({queryKey: [`transaction-${id}`]});
             toast("Successfully Update Transaction");
         },
         onError: () => {

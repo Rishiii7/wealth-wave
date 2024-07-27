@@ -90,6 +90,77 @@ const app = new Hono()
     }
 )
 .get(
+    "/category/:categoryId",
+    clerkMiddleware(),
+    zValidator("param", GetTransactionById),
+    async (c) => {
+        const auth = getAuth(c);
+
+        try {
+
+            const categoryId = c.req.param("categoryId");
+
+            if( !auth?.userId ) {
+                throw new Error("Unauthorized");
+            }
+
+            if( !categoryId ) {
+                throw new Error("Id required to fetch data");
+            }
+
+            const response = await db.transcations.findMany({
+                where: {
+                    AND: [
+                        {
+                            categoryId: categoryId
+                        },
+                        // {
+                        //     category: {
+                        //         userId: auth?.userId || ""
+                        //     }
+                        // },
+                        
+                    ],
+                },
+                select: {
+                    id: true,
+                    date: true,
+                    categoryId: true,
+                    payee: true,
+                    amount: true,
+                    notes: true,
+                    accountId: true,
+                    createdAt: true,
+                    account: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    category:{
+                        select:{
+                            name: true
+                        }
+                    },
+                },
+            });
+
+            if( !response ) {
+                throw new Error("Not found");
+            }
+
+            return c.json({
+                data: response
+            });
+
+        } catch(error: any) {
+            throw new HTTPException(500, {
+                message: error.message
+            })
+        }
+    }
+
+)
+.get(
     "/:id",
     clerkMiddleware(),
     zValidator("param", GetTransactionById),
@@ -112,7 +183,7 @@ const app = new Hono()
                 where: {
                     AND: [
                         {
-                            categoryId: id
+                            id: id
                         },
                         // {
                         //     category: {
@@ -124,7 +195,7 @@ const app = new Hono()
                 },
                 select: {
                     id: true,
-                    // date: true,
+                    date: true,
                     categoryId: true,
                     payee: true,
                     amount: true,
