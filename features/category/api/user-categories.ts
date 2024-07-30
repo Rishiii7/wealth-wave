@@ -133,6 +133,7 @@ export const useUpdateCategoryByID = () => {
     },
     onSuccess: () => {
       query.invalidateQueries({queryKey: [`categories`]});
+      query.invalidateQueries({queryKey: [`transactions`]});
       toast("Category Updated")
     },
     onError: () => {

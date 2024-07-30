@@ -134,6 +134,7 @@ export const useUpdateAccountByID = () => {
     },
     onSuccess: () => {
       query.invalidateQueries({queryKey: [`accounts`]});
+      query.invalidateQueries({ queryKey: ["transactions"]});
       toast("Account Updated")
     },
     onError: () => {
