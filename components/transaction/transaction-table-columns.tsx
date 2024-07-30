@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { InferResponseType } from "hono";
 import { client } from "@/lib/hono";
 import { Actions } from "./actions";
+import { format } from "date-fns";
 
 type TransactionResponse = InferResponseType<typeof client.api.transaction["$get"]>['data'][0];
 
@@ -130,6 +131,15 @@ export const columns: ColumnDef<Transaction>[] = [
                   </div>
           )
       },
+        cell: ({row}) => {
+            return(
+                <>
+                <span>
+                    { format(row.original.date, "dd/MM/yyyy")}
+                </span>
+                </>
+            )
+        }
     },
     {
       accessorKey: "category",
