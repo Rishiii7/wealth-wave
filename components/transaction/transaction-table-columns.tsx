@@ -59,6 +59,15 @@ export const columns: ColumnDef<Transaction>[] = [
                     </div>
             )
         },
+        cell: ({row}) => {
+            return(
+                <>
+                    <span>
+                        ${row.original.amount}
+                    </span>
+                </>
+            )
+        }
     },
     {
       accessorKey: "payee",

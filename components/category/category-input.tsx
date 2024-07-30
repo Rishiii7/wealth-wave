@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod"
 import { usePostCategoryInput } from "@/features/category/api/user-categories";
 import { Plus } from "lucide-react";
+import { useOpenNewCategoryButton } from "../hooks/open-edit-category";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -49,7 +50,7 @@ export const CategoryInputDialog = ({
   title,
   data
 }: CategoryInputDialogProps) => {
-  const [open, setOpen] = useState(false);
+  const {isOpen, onClose} = useOpenNewCategoryButton();
 
   const mutation = usePostCategoryInput();
 
@@ -72,28 +73,9 @@ export const CategoryInputDialog = ({
   return (
     <div>
       <Dialog
-        open={open}
-        onOpenChange={setOpen}
+        open={isOpen}
+        onOpenChange={onClose}
       >
-        <DialogTrigger asChild>
-        {
-          data ? (
-            <Button
-              className='w-full lg:max-w-56'
-            >
-              Edit
-            </Button>
-          ) : (
-          <Button
-            className='w-full lg:max-w-56'
-            >
-              <Plus 
-                className='w-5 h-5 mr-2'
-              />
-            Add new
-          </Button>)
-        }
-        </DialogTrigger>
         <DialogContent className="rounded-lg">
         <DialogHeader className="items-center">
           <DialogTitle>{title}</DialogTitle>

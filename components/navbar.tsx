@@ -33,7 +33,7 @@ export const NavBar = () => {
 
   return (
     <>
-        <div className="space-y-2 lg:space-y-0 lg:flex justify-evenly lg:gap-x-5 text-white">
+        <div className="space-y-2 lg:space-y-0 lg:flex justify-evenly lg:gap-x-5  text-white lg:text-lg">
             {
                 routes.map( (route, ind) => {
                     return (

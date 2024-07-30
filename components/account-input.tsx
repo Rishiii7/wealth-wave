@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod"
 import { usePostAccoutInput } from "@/features/accounts/api/user-accounts";
 import { Plus } from "lucide-react";
+import { useOpenNewAccountButton } from "./hooks/open-edit-account";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -51,7 +52,7 @@ export const AccountsInputDialog = ({
   title,
   data
 }: AccountInputDialogProps) => {
-  const [open, setOpen] = useState(false);
+  const {isOpen, onClose} = useOpenNewAccountButton();
 
   const mutation = usePostAccoutInput();
 
@@ -74,28 +75,9 @@ export const AccountsInputDialog = ({
   return (
     <div>
       <Dialog
-        open={open}
-        onOpenChange={setOpen}
+        open={isOpen}
+        onOpenChange={onClose}
       >
-        <DialogTrigger asChild>
-        {
-          data ? (
-            <Button
-              className='w-full lg:max-w-56'
-            >
-              Edit
-            </Button>
-          ) : (
-          <Button
-            className='w-full lg:max-w-56'
-            >
-              <Plus 
-                className='w-5 h-5 mr-2'
-              />
-            Add new
-          </Button>)
-        }
-        </DialogTrigger>
         <DialogContent className="rounded-lg">
         <DialogHeader className="items-center">
           <DialogTitle>{title}</DialogTitle>

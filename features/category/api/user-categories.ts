@@ -10,7 +10,7 @@ const $post = client.api.category.$post;
 export const useGetCategories = () => {
 
   const query = useQuery({
-    queryKey: ["category"],
+    queryKey: ["categories"],
     queryFn: async () => {
       const response = await client.api.category.$get();
 
@@ -44,7 +44,7 @@ export const usePostCategoryInput = () => {
       return await response.json();
     },
     onSuccess: () =>{
-      queryClient.invalidateQueries({ queryKey: ["postCategoryInput"]});
+      queryClient.invalidateQueries({ queryKey: ["categories"]});
       toast("Category created successfully");
     },
     onError: () => {
@@ -77,7 +77,7 @@ export const usePostBulkDelete = () => {
       return await response.json();
     },
     onSuccess : () => {
-      query.invalidateQueries({ queryKey: ["postBulkDeleteCategory"]});
+      query.invalidateQueries({ queryKey: ["categories"]});
       toast(`Categories successfully deleted `);
     },
     onError: () => {
@@ -132,7 +132,7 @@ export const useUpdateCategoryByID = () => {
       return await response.json();
     },
     onSuccess: () => {
-      query.invalidateQueries({queryKey: [`updateCategoryByID`]});
+      query.invalidateQueries({queryKey: [`categories`]});
       toast("Category Updated")
     },
     onError: () => {

@@ -20,11 +20,12 @@ export const NavButton = ({
     <div>
         <Button 
             variant={"secondary"}
-            size={"sm"}
+            size={"default"}
             className={ cn("bg-transparent hover:bg-white/10 transition text-white", isActive ? "bg-white/10 text-white" : "") }
         >
             <Link 
                 href={href}
+                className="text-lg"
             >
             { label }
             </Link>

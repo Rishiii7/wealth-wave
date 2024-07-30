@@ -16,7 +16,7 @@ import { WelcomeMsg } from './welcome-msg';
 export const Header = () => {
   return (
     <>
-    <div className='space-y-12 pb-16'>
+    <div className='space-y-12 pb-16 max-w-7xl mx-auto'>
 
         <div className=' flex items-center justify-between'>
             <div className=' lg:flex items-center lg:gap-x-5'>

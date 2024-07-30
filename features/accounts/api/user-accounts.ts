@@ -10,7 +10,7 @@ const $post = client.api.accounts.$post;
 export const useGetAccounts = () => {
 
   const query = useQuery({
-    queryKey: ["account"],
+    queryKey: ["accounts"],
     queryFn: async () => {
       const response = await client.api.accounts.$get();
 
@@ -45,7 +45,7 @@ export const usePostAccoutInput = () => {
       return await response.json();
     },
     onSuccess: () =>{
-      queryClient.invalidateQueries({ queryKey: ["accountsPost"]});
+      queryClient.invalidateQueries({ queryKey: ["accounts"]});
       toast("Account created successfully");
     },
     onError: () => {
@@ -78,7 +78,7 @@ export const usePostBulkDelete = () => {
       return await response.json();
     },
     onSuccess : () => {
-      query.invalidateQueries({ queryKey: ["postBulkDelete"]});
+      query.invalidateQueries({ queryKey: ["accounts"]});
       toast(`Accounts successfully deleted `);
     },
     onError: () => {
@@ -133,7 +133,7 @@ export const useUpdateAccountByID = () => {
       return await response.json();
     },
     onSuccess: () => {
-      query.invalidateQueries({queryKey: [`updateAccountByID`]});
+      query.invalidateQueries({queryKey: [`accounts`]});
       toast("Account Updated")
     },
     onError: () => {
