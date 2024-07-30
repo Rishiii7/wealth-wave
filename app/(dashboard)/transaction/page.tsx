@@ -8,27 +8,47 @@ import { TransactionEditDialog } from '@/components/transaction/transaction-edit
 import { TransactionDataTable } from '@/components/transaction/transaction-table';
 
 import { useGetTransactionByAccountId } from '@/features/transaction/user-transaction';
-import { ComboboxDemo } from '@/components/TestComponent';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { useOpenNewTransactionButton } from '@/components/hooks/open-edit-transaction';
+
 
 const TransactionPage = () => {
   const data = useGetTransactionByAccountId({});
+  const {onOpen} = useOpenNewTransactionButton();
   const transaction = data.data?.data || []
 
   // console.log('[TRANSACTION DATA FETCH] : '+ JSON.stringify(transaction))
 
   return (
     <div className='-mt-16 flex flex-col items-center p-2 bg-slate-50 shadow-xl rounded-lg mx-4 '>
-      <div className=' pt-6 w-full lg:flex lg:justify-around lg:gap-x-6 lg:items-center space-y-2 lg:space-y-0'>
-        <div className='w-full text-2xl font-bold text-center'>
+      <div className=' pt-6 w-full lg:flex lg:justify-between lg:gap-x-6 lg:items-center space-y-2 lg:space-y-0 px-10'>
+        <div className='w-full text-2xl font-bold flex flex-1 justify-center lg:justify-start'>
           Transaction History
         </div>
-        <div className='w-full lg:flex lg:justify-end lg:mr-10'>
+        <div>
+
+        
+        <Button
+          className='w-full lg:max-w-56'
+          onClick={() => {
+            console.log("after button clicked");
+            onOpen()}}
+          >
+            <Plus 
+              className='w-5 h-5 mr-2'
+              
+                />
+          Add new
+        </Button>
+        </div>
+        
+      </div>
+      <div className='w-full lg:flex lg:justify-end lg:mr-10'>
           <TransactionInputDialog 
             title='Create New Category'  
           />
         </div>
-        
-      </div>
       <div className='w-full lg:flex lg:justify-end lg:mr-10'>
         <TransactionEditDialog 
           title='Edit Transaction'

@@ -21,6 +21,7 @@ import { InsertTransactionSchema } from "@/types/transaction";
 import { useCreateTransaction, useGetTransactionByAccountId } from "@/features/transaction/user-transaction";
 import { useGetAccountByID, useGetAccounts } from "@/features/accounts/api/user-accounts";
 import { useGetCategories } from "@/features/category/api/user-categories";
+import { useOpenNewTransactionButton } from "../hooks/open-edit-transaction";
 
 
 
@@ -36,7 +37,8 @@ type TransactionInputDialogProps = {
 export const TransactionInputDialog = ({
   title,
 }: TransactionInputDialogProps) => {
-  const [open, setOpen] = useState(false);
+
+  const {isOpen, onClose} = useOpenNewTransactionButton();
 
   const mutation = useCreateTransaction();
   const accountQuery = useGetAccounts();
@@ -67,25 +69,15 @@ export const TransactionInputDialog = ({
     // console.log("[TRANSACTION FORM VALUES]"+ JSON.stringify(values));
     mutation.mutate( values );
     form.reset();
-    setOpen(false);
+    onClose();
   }
  
   return (
     <div>
       <Dialog
-        open={open}
-        onOpenChange={setOpen}
+        open={isOpen}
+        onOpenChange={onClose}
       >
-        <DialogTrigger asChild>
-          <Button
-            className='w-full lg:max-w-56'
-            >
-              <Plus 
-                className='w-5 h-5 mr-2'
-              />
-            Add new
-          </Button>
-        </DialogTrigger>
         <DialogContent className="rounded-lg">
         <DialogHeader className="items-center">
           <DialogTitle>{title}</DialogTitle>

@@ -115,7 +115,7 @@ export const useCreateTransaction = () => {
             return await response.json();
         },
         onSuccess: () => {
-            query.invalidateQueries({queryKey : ['transaction']});
+            query.invalidateQueries({queryKey : ['transactions']});
             toast("Transaction created successfully");
         },
         onError: () => {
@@ -147,7 +147,7 @@ export const useBulkDeleteTransaction = () => {
             return await response.json();
         },
         onSuccess: () => {
-            query.invalidateQueries({ queryKey: ['transaction']});
+            query.invalidateQueries({ queryKey: ['transactions']});
             toast("Transactions deleted succesfully");
         },
         onError: () => {
