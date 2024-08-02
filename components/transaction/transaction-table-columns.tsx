@@ -98,7 +98,7 @@ export const columns: ColumnDef<Transaction>[] = [
                   onClick={ ()=> column.toggleSorting(column.getIsSorted() ==="asc")}
                   className="text-center text-lg "
                   >
-                  Account Name 
+                  Account  
                   <ArrowUpDown className="ml-2 h-4 w-4"/>
               </Button>
                   </div>
@@ -161,12 +161,21 @@ export const columns: ColumnDef<Transaction>[] = [
                   onClick={ ()=> column.toggleSorting(column.getIsSorted() ==="asc")}
                   className="text-center text-lg "
                   >
-                  Category Name 
+                  Category 
                   <ArrowUpDown className="ml-2 h-4 w-4"/>
               </Button>
                   </div>
           )
       },
+        cell: ({row}) => {
+            return(
+                <>
+                <span>
+                    { row.original.category }
+                </span>
+                </>
+            )
+        }
     },
     {
         id: "actions",

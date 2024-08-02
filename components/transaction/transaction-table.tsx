@@ -99,11 +99,6 @@ export const TransactionDataTable = <TData, TValue>({
           }
         </div>
       </div>
-      <div>
-        {/* {
-          JSON.stringify(table.getRowModel().rows[0]?.getVisibleCells()[0].getContext().cell.row.original.category.name)
-        } */}
-      </div>
       {/* Tables div */}
       <div>
         <Table className="text-md lg:text-lg items-center">
