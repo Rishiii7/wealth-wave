@@ -12,21 +12,16 @@ import { SelectCSVColumns } from './select-csv-import';
 type CSVTableProps = {
     header: string[];
     data: string[][];
+    selectedColumns: string[];
+    onTableSelectChange: (index: number, value: string) => void;
 }
 export const CSVTable = ({
     header,
-    data
+    data,
+    selectedColumns,
+    onTableSelectChange
 }: CSVTableProps) => {
-    const [selectedColumns, setSelectedColumns] = useState<string[]>(Array(header.length).fill(''));
-
-    const onChange = (index: number, value: string) => {
-        setSelectedColumns(prev => {
-            let columns = [...prev];
-            columns[index] =  value;
-            return columns
-        });
-        console.log(selectedColumns)
-    }
+    
 
     console.log("IMPORT CSV CARD")
   return (
@@ -40,7 +35,7 @@ export const CSVTable = ({
                                 <SelectCSVColumns 
                                     columnIndex={ind}
                                     columnHeaders = { header}
-                                    onChange={onChange}
+                                    onChange={onTableSelectChange}
                                     selectedColumns={selectedColumns}
                                 />
                             </TableHead>

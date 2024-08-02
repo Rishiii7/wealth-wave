@@ -1,18 +1,73 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from './ui/button';
 import { CSVTable } from './csv-table';
 
 type ImportCSVCardProps = {
     onCancel: () => void;
     data: string[][];
+    onSubmit?: (data: any) => void;
 }
+
+const requiredFileds = [
+    "amount",
+    "date",
+    "payee",
+]
 
 export const ImportCSVCard = ({
     onCancel,
-    data
+    data,
+    onSubmit,
 }: ImportCSVCardProps) => {
     const headers = data[0];
     const tableBody = data.slice(1);
+
+    const [selectedColumns, setSelectedColumns] = useState<string[]>(Array(headers.length).fill(''));
+
+    const progress = selectedColumns.filter( (val) => {
+        return val !== ""
+    });
+
+    console.log('[PROGRESS] : ' + progress);
+
+    const onTableSelectChange = (index: number, value: string) => {
+        setSelectedColumns(prev => {
+            let columns = [...prev];
+            columns[index] =  value;
+            return columns
+        });
+        console.log(selectedColumns)
+    };
+
+    const onHandleContinue = () => {
+        // console.log('[INSIDE HANDLE CONTINUE] : ' + tableBody);
+        const mappedData = {
+            header: selectedColumns.map( (val) => {
+                return val ? val : null
+            }),
+            body: tableBody.map((rows, ind) => {
+                const row = rows.map( (cell, ind) => {
+                    return selectedColumns[ind] ? cell : null
+                });
+                return row; 
+            })
+        }
+
+        // console.log(mappedData)
+
+        const arrayOfData = mappedData.body.map( (rows, ind) => {
+            return rows.reduce( (acc: any, cell, ind) => {
+                const header = mappedData.header[ind];
+                if( header != null ) {
+                    acc[header] = cell
+                }
+
+                return acc
+            }, {});
+        });
+
+        console.log( arrayOfData );
+    }
 
   return (
         <>
@@ -28,11 +83,21 @@ export const ImportCSVCard = ({
                 >
                 Cancel
                 </Button>
+                <Button
+                    onClick={onHandleContinue}
+                    className='w-full lg:max-w-56'
+                    disabled={progress.length < requiredFileds.length}
+                >
+                    Continue {" "}
+                    { progress.length } / {requiredFileds.length}
+                </Button>
             </div>
             </div>
             <CSVTable 
                 header={headers}
                 data={tableBody}
+                onTableSelectChange={onTableSelectChange}
+                selectedColumns={selectedColumns}
             />
         </div>
         </>

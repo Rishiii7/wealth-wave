@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
     Select,
@@ -15,13 +15,18 @@ type SelectCSVColumnsProps = {
     selectedColumns: string[]
 }
 
+const options = [
+    "amount",
+    "payee",
+    "date"
+]
+
 export const SelectCSVColumns = ({
     columnIndex,
-    columnHeaders,
     onChange,
     selectedColumns,
 }: SelectCSVColumnsProps) => {
-    console.log("[SELECT_CSV_COLUMN] : "+ selectedColumns);
+    // console.log("[SELECT_CSV_COLUMN] : "+ selectedColumns);
   return (
     <>
         <Select
@@ -30,12 +35,16 @@ export const SelectCSVColumns = ({
                 onChange(columnIndex, value);
             }}
         >
-            <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a column" />
+            <SelectTrigger className="w-[150px] bg-transaprent">
+                <SelectValue 
+                    placeholder="Select a column" 
+                />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent
+                className='bg-purple-500 text-white font-medium'
+            >
                 {
-                    columnHeaders.map( (col, ind) => (
+                    options.map( (col, ind) => (
                         <SelectItem 
                             value={col}
                             key={ind}
