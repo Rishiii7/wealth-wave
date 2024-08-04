@@ -9,14 +9,15 @@ import { AccountEditDialogComponent } from '@/components/account-edit-dialog';
 import { Button } from '@/components/ui/button';
 import { useOpenNewAccountButton } from '@/components/hooks/open-edit-account';
 import { Plus } from 'lucide-react';
+import { useDialogConfirm } from '@/components/dialog-confirmation';
 
 const AccountsPage = () => {
 
   const {onOpen} = useOpenNewAccountButton();
-  // const data = await getData();
+  
+  
   const data = useGetAccounts();
   const accounts = data.data || []
-  // console.log( "[Data in accounts/page.tsx] : "  + JSON.stringify(data.data))
 
   return (
     <div className='-mt-16 flex flex-col justify-center items-center p-2 bg-slate-50 shadow-xl rounded-lg mx-auto max-w-7xl'>

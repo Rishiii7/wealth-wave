@@ -49,6 +49,7 @@ const TransactionPage = () => {
         <ImportCSVCard 
           onCancel={onCancel}
           data = {importResults.data}
+          onSubmit={ () => {}}
         />
       </>
     )

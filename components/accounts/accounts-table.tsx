@@ -25,6 +25,7 @@ import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { usePostBulkDelete } from "@/features/accounts/api/user-accounts";
+import { useDialogConfirm } from "../dialog-confirmation";
   
 
 interface DataTableProps<TData, TValue> {
@@ -60,17 +61,25 @@ export const AccountsDataTable = <TData, TValue>({
   });
 
   const deleteAccounts = usePostBulkDelete();
+  const [confirm, ConfirmDialogComponent] = useDialogConfirm({
+    title: "Are you sure?",
+    description: "You are about to delete an account"
+  });
 
-  const onDelete = (rows: Row<TData>[] ) => {
+  const onDelete = async (rows: Row<TData>[] ) => {
     const ids = rows.map( (row:any) => row.original.id);
 
-    // console.log("[DELETE ON SELECT] : " + JSON.stringify(ids));
-    deleteAccounts.mutate({ids: ids});
+    const ok = await confirm();
+
+    if(ok) {
+      deleteAccounts.mutate({ids: ids});
+    }
   }
 
   return (
     <>
     <div>
+      <ConfirmDialogComponent />
       <div className="flex items-center justify-between">
         {/* Filter Name */}  
         <div className="flex items-center py-4">

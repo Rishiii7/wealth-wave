@@ -5,7 +5,7 @@ import { CSVTable } from './csv-table';
 type ImportCSVCardProps = {
     onCancel: () => void;
     data: string[][];
-    onSubmit?: (data: any) => void;
+    onSubmit: (data: any) => void;
 }
 
 const requiredFileds = [
@@ -66,7 +66,7 @@ export const ImportCSVCard = ({
             }, {});
         });
 
-        console.log( arrayOfData );
+        onSubmit(arrayOfData);
     }
 
   return (
