@@ -315,6 +315,26 @@ const app = new Hono()
         }
     }
 )
+.post(
+    "/bulk-create",
+    // zValidator(),
+    clerkMiddleware(),
+    async (c) => {
+        const auth = getAuth(c);
+
+        try {
+
+            if(! auth?.userId) {
+                throw new Error("Unauthorized");
+            }
+
+        } catch( error: any ) {
+            throw new HTTPException(500, {
+                message: error.message
+            })
+        }
+    }
+)
 .patch(
     "/:id",
     clerkMiddleware(),

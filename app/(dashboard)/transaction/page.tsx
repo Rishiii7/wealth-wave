@@ -12,6 +12,7 @@ import { Plus } from 'lucide-react';
 import { useOpenNewTransactionButton } from '@/components/hooks/open-edit-transaction';
 import { UploadCSV } from '@/components/transaction/upload-csv';
 import { ImportCSVCard } from '@/components/import-csv-card';
+import { useTransactionImportConfirm } from '@/components/hooks/use-confirm-transaction';
 
 enum VARIANTS  {
   LIST = "LIST",
@@ -31,6 +32,7 @@ const TransactionPage = () => {
   const data = useGetTransactionByAccountId({});
   const {onOpen} = useOpenNewTransactionButton();
   const transaction = data.data?.data || [];
+  // const [confirm, ConfirmDialog] = useTransactionImportConfirm();
 
   const onUpload = ( results: typeof INITIAL_IMPORT_RESULT) => {
     setImportedResults(results);
@@ -43,13 +45,20 @@ const TransactionPage = () => {
     setVariant(VARIANTS.LIST);
   }
 
+  const onHandleImportSubmit = (data: any) => {
+      console.log('[INSIDE MAIN PAGE] :' + JSON.stringify(data));
+
+      // Logic for use Bulk create
+  }
+
   if( variant==="IMPORT") {
     return (
       <>
+      {/* <ConfirmDialog /> */}
         <ImportCSVCard 
           onCancel={onCancel}
           data = {importResults.data}
-          onSubmit={ () => {}}
+          onSubmit={ onHandleImportSubmit }
         />
       </>
     )
