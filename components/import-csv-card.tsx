@@ -105,7 +105,8 @@ export const ImportCSVCard = ({
                 return {
                     ...val,
                     accountId: selectAccount.current,
-                    catgoryId: selectCategory.current
+                    categoryId: selectCategory.current,
+                    
                 }
             });
             onSubmit(newArrayOfData);

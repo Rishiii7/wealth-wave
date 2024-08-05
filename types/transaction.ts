@@ -20,6 +20,13 @@ export const InsertTransactionSchema = z.object({
     categoryId: z.string()
 });
 
+export const BulkCreateTransactionSchema = z.object({
+    data: z.array(InsertTransactionSchema.omit({
+        id: true
+    }))
+});
+
+
 export const BulkDeleteTransactionSchema = z.object({
     ids: z.array(z.string())
 });

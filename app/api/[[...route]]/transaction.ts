@@ -1,5 +1,5 @@
 import { db } from "@/db/db";
-import { BulkDeleteTransactionSchema, GetTransactionById, GetTranscationByDate, InsertTransactionSchema } from "@/types/transaction";
+import { BulkCreateTransactionSchema, BulkDeleteTransactionSchema, GetTransactionById, GetTranscationByDate, InsertTransactionSchema } from "@/types/transaction";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
@@ -20,9 +20,9 @@ const app = new Hono()
             const { from, to, accountId } = c.req.valid("query");
             console.log(accountId)
 
-            // if( !auth?.userId ) {
-            //     throw new Error("Unauthorized");
-            // }
+            if( !auth?.userId ) {
+                throw new Error("Unauthorized");
+            }
 
             // console.log(auth.userId);
 
@@ -247,7 +247,7 @@ const app = new Hono()
             // if( !auth?.userId ){
             //     throw new Error("Unauthorized User");
             // }
-            console.log( values );
+            console.log( values.date );
             const currentDate = new Date().toISOString();
             console.log(currentDate)
 
@@ -317,18 +317,32 @@ const app = new Hono()
 )
 .post(
     "/bulk-create",
-    // zValidator(),
     clerkMiddleware(),
+    zValidator("json", BulkCreateTransactionSchema),
     async (c) => {
+        console.log("inside route");
         const auth = getAuth(c);
 
         try {
+            const {data } = c.req.valid("json");
 
-            if(! auth?.userId) {
-                throw new Error("Unauthorized");
+            if( !auth?.userId) {
+                throw new Error("Unauthorized User");
             }
 
-        } catch( error: any ) {
+            if( !data ) {
+                throw new Error("Id's required");
+            }
+
+            const response = await db.transcations.createMany({
+                data: data
+            });
+
+            return c.json({
+                data: response
+            });
+
+        } catch( error : any) {
             throw new HTTPException(500, {
                 message: error.message
             })
